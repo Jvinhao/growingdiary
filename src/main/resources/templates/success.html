@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title></title>
+    <div th:replace="nav :: css"></div>
+</head>
+<body style="background:url('http://qzonestyle.gtimg.cn/qzone/qzactStatics/imgs/20171123181522_c48800.jpg') no-repeat;
+	background-size: cover;
+">
+<div class="container">
+    <div class="row">
+        <div class="col-lg-6 col-lg-offset-3" style="margin-top: 10%;">
+           <div class="register-success">
+               <span th:text="${successInfo}"></span>,还剩<span id="times">5</span>s转到主页 <a href="/" style="font-size: 14px;">点击立即跳转</a>
+           </div>
+        </div>
+
+    </div>
+</div>
+
+<div th:replace="nav :: js"></div>
+
+<script>
+    var t = 4;
+    setInterval("toIndex()", 1000); //启动1秒定时
+    function toIndex() {
+        if (t === 0){
+            window.location.href = "/";
+            return;
+        }
+        document.getElementById('times').innerHTML = t; // 显示倒计时
+        t--; // 计数器递减
+    }
+
+
+</script>
+</body>
+</html>

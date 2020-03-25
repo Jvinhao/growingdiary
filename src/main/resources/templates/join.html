@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>成长日记-Join</title>
+    <div th:replace="nav :: css"></div>
+    <style>
+        a:hover {
+            text-underline: none;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-default" th:replace="nav :: navs">
+</nav>
+
+<div class="container-fluid" style="height: 615px;">
+    <div class="row">
+        <div class="col-lg-1 col-sm-1"></div>
+        <div class="col-lg-11 col-md-11 col-sm-11" style=" border-right: 1px solid beige">
+            <div class="col-lg-5" style="border-radius:10px;margin-left: 4%; height: 400px;background: #d9edf7 ">
+                <h4 style="text-align: center">成长日记-成长计划</h4>
+                <div class="col-lg-offset-1 col-lg-10 divider" style="background: #5bc0de"></div>
+            </div>
+            <div class="col-lg-5" style="border-radius:10px;margin-left: 4%;height: 400px; background: #f7ecb5">
+                <h4 style="text-align: center">共同建设我们的社区</h4>
+                <div class="col-lg-offset-1 col-lg-10 divider" style="background: #5bc0de"></div>
+                <div class="col-lg-offset-1 col-lg-10 divider">
+                    <p>&nbsp;&nbsp;&nbsp;&nbsp;Hi,你好，欢迎加入成长日记，它的最初目的是为了希望记录我们每个人再成长过长中遇到的点点滴滴，它是一个公共的日记本，你的每个故事都会被分享给他人
+                        但是它的作用远不止于此，我希望它能为每一个人服务，成为一个属于我们自己的社圈。作为网站的负责人，我真情的邀请你，成为我们大家庭中的一员，这个社交圈，我们自己来打造。
+                        网站的开发源码，它是开源的，但是我们现在缺少开发人员，推广人员，同时我们也需要大家的建议，因为你们的建议能让它成长的更好。
+
+                        <br><span style="font-weight: 600">我们需要你：</span><br>
+                            前端开发，后台开发，产品体验员等等。
+                        <br>
+                    </p>
+                    <div class="col-lg-12 divider" style="background: #5bc0de"></div>
+                    <span style="float: right">联系人邮箱:1340589637@qq.com</span>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:replace="nav:: beian">
+
+</div>
+
+
+</body>
+
+</html>

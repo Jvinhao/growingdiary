@@ -1,0 +1,25 @@
+spring:
+  profiles:
+    active: pro
+  thymeleaf:
+    cache: false
+    mode: LEGACYHTML5
+  mvc:
+    favicon:
+      enabled: false
+  redis:
+    host: 182.92.198.237
+    port: 6379
+    database: 0
+
+
+serverAddr: http://182.92.198.237
+maxPage: 20
+defaultImg: http://182.92.198.237/group1/M00/00/00/rBgj314lsmCAP7UBAAAZ9TTQn2Q052.jpg
+
+qqemailauth: cshuzmmbykhvhiai
+
+client_id: 101850561
+client_secret: 93c08f0f87b603767a1847133092eff9
+redirect_uri: http://growingdiary.club/authorize
+# redirect_uri: http://192.168.1.105:8080/authorize

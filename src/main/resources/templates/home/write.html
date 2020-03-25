@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>成长日记-写日记</title>
+    <div th:replace="nav :: css"></div>
+
+    <!--<script rel="script" type="javascript" src="js/jquery-1.11.3.min.js"></script>-->
+</head>
+<body>
+<nav class="navbar navbar-default" th:replace="nav :: navs"></nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-2 col-md-3 col-sm-3" style="margin-top: 10px;" th:replace="nav:: tabar"></div>
+
+        <div class="col-lg-8 col-md-8 col-sm-8" style="background: #f3f3f3">
+            <div class="col-lg-offset-2 col-lg-8">
+                <h3>记录你的时光</h3>
+                <div class="divider col-lg-12 col-md-12 col-sm-12" style="background: #0f0f0f"></div>
+                <br>
+                <form class="form-horizontal" action="/saveDiary" method="post" style="font-size: 15px" id="form-diary">
+                    <div class="form-group">
+                        <label for="diaryTitle" class="col-lg-2 col-sm-3 control-label">标题 </label>
+                        <div class="col-sm-6 col-lg-6 col-sm-6">
+                            <input type="text" class="form-control" id="diaryTitle" placeholder="日记标题"
+                                   name="diaryTitle">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="input_date" class="col-sm-3 col-lg-2 col-md-2 control-label">日记时间</label>
+                        <div class="col-sm-6 col-lg-6 col-sm-6">
+                            <input type="text" class="form-control" placeholder="例如: 2020-01-01" id="input_date"
+                                   name="diaryDate" style="border:0.5px solid #fac090" autocomplete="off"/>
+
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="isShow" class="col-sm-3  col-lg-2 col-md-2 control-label">是否公开</label>
+                        <div class="col-sm-6 col-lg-6 col-sm-6" style="line-height:34px;">
+                            <input type="radio" name="isShow" value="1" id="isShow" checked>&nbsp;&nbsp;公开的
+                            <input type="radio" name="isShow" value="0" style="margin-left: 20px;">&nbsp;&nbsp;私密的
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="input_date" class="col-sm-3  col-lg-2 col-md-2 control-label">所属日记本</label>
+                        <div class="col-sm-6 col-lg-6 col-sm-6">
+                            <select class="form-control" name="parentId" id="parentId">
+                                <option checked value="">--选择一个日记本--</option>
+                                <option th:each="diaryBookVO : ${diaryBookVOList}" th:value="${diaryBookVO.id}">
+                                    [[${diaryBookVO.title}]]
+                                </option>
+                                <!--<option>心情</option>
+                                <option>随记</option>
+                                <option>学习</option>
+                                <option>大学</option>-->
+                            </select>
+                            <span id="errorMsg" style="color: red;display: none">您还未选择日记本,请先选择一个日记本哦！</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="editor">日记内容</label>
+                        <div class="alert alert-success" role="alert">
+                        </div>
+                        <textarea name="diaryContent" id="editor">
+
+                        </textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <button onclick="saveDiary()" type="button" class="btn btn-success">保存</button>
+                            <button type="reset" class="btn btn-default col-lg-offset-4">取消</button>
+                        </div>
+
+                    </div>
+                </form>
+
+
+            </div>
+
+
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-2">
+
+        </div>
+
+    </div>
+</div>
+
+<div th:replace="nav :: js">
+
+</div>
+<script th:src="@{/ckeditor/ckeditor.js}"></script>
+<script>
+    $(function () {
+        CKEDITOR.replace( 'editor',{
+
+        });
+
+    });
+
+    $(function () {
+        $("input").attr("autocomplete","off")
+    });
+
+
+
+
+</script>
+</body>
+
+
+</html>

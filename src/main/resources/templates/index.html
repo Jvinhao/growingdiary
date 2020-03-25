@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>成长日记-首页</title>
+    <div th:replace="nav :: css"></div>
+    <style>
+        @media screen and (min-width: 320px) and (max-width: 767px) {
+            .name-margin {
+                margin-left: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-default" th:replace="nav :: navs">
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-2  col-sm-1"></div>
+        <div class="col-lg-6 col-md-6 col-sm-6" style="border-right: 1px solid beige">
+            <div class="jumbotron" style="color: #ffffff;background: #67b168">
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;成长的路总是很长很长，记录下这一段段的点点滴滴，分享你的成长轨迹，让更多的人知道你的故事！</p>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;共有<span th:text="${userCount}" style="color:red;"></span>人在这里分享他们的<span
+                        th:text="${diaryCount}" style="color:red;"></span>个成长轨迹</p>
+                <a class="btn btn-block" href="/joinUs"
+                   style="color: black ; background: #ffffff;opacity: 0.8">加入我们吧！</a>
+            </div>
+            <div class="col-lg-12 col-sm-12 col-md-12" style="margin-top: -25px">
+                <div class="col-lg-12 col-sm-12 col-md-12">
+                    <h3 style="float: left;margin-left: -16px">最新日记</h3>
+                    <button th:onclick="writeDiary()" style="float: right; margin-top: 15px; padding-left: 15px"
+                            class="btn btn-default">写一篇日记
+                    </button>
+
+                </div>
+                <div style="clear:both;"></div>
+                <div class="col-lg-12 col-sm-12 col-md-12 divider" style="background: greenyellow"></div>
+                <div class="col-lg-12 col-sm-12 col-md-12 media-content" th:each="diary : ${diaryList}">
+                    <div class="col-lg-12 col-sm-12 col-md-12" style="margin: 10px auto">
+                        <h4 class="media-heading" style="text-align: center">
+                            <span th:text="${diary.diaryTitle}">考研日记</span>
+                        </h4>
+                        <div class="col-lg-2 col-md-3 col-sm-3">
+                            <div class="col-lg-12 col-md-12 col-sm-12">
+                                <img class="img-rounded" th:src="${diary.user.userImg}" src="img/alarm_btn.png"
+                                     alt="..." style="width: 50px;height: 50px">
+                            </div>
+                            <div class="col-lg-12 col-md-12 col-sm-12">
+                                <span style="font-size: 13px;position: absolute;top: 2px;" th:text="${diary.user.username}">姜文豪</span>
+                            </div>
+                        </div>
+                        <div class="col-lg-10 col-md-4 col-sm-8">
+                                <div th:utext="${diary.diaryContent}"></div>
+                        </div>
+                        <div class="col-lg-12 col-sm-12 col-md-12" style="margin-top: 10px;">
+                            <div th:onclick="addPraise([[${diary.id}]])"
+                                 class="col-lg-offset-2 col-sm-offset-2 col-md-offset-2 col-lg-3 col-md-4 col-sm-4"
+                                 style="cursor: pointer;" aria-hidden="true" title="点赞">
+                                <img src="/images/thumbsup.png" width="20px"/>&nbsp;点赞:
+                                <span th:text="${diary.likeCount}" th:id=" 'praise-' + ${diary.id}"
+                                      th:data-add="1"></span>
+                            </div>
+
+                            <a class="col-lg-3 col-md-5 col-sm-5" aria-hidden="true" title="评论" role="button"
+                               data-toggle="collapse" th:href="'#collapseComment' + ${diary.id}" aria-expanded="false"
+                               aria-controls="collapseExample">
+                                <div class="col-lg-12 col-md-12 col-sm-12" th:onclick="showComment([[${diary.id}]])">
+                                    <img src="/images/comment.png" width="20px"/>&nbsp;评论:
+                                    <span th:text="${diary.commentCount}" th:id=" 'comment-' + ${diary.id}"></span>
+                                </div>
+
+                            </a>
+                            <span style="float: right; padding-right: 10px; font-size: 14px; padding-top: 5px">记录日期： <span
+                                    th:text="${#dates.format(diary.createTime,'yyyy-MM-dd HH:mm:ss')}"></span></span>
+                        </div>
+
+                    </div>
+                    <div class="collapse col-lg-12 col-sm-12 col-md-12" th:id="'collapseComment' + ${diary.id}"
+                         data-show="0">
+                        <div class="well col-lg-12 col-sm-12 col-md-12" th:id="'comment' + ${diary.id}"
+                             style="padding: 10px!important;margin-bottom: 12px!important;">
+
+
+                            <div class="media" th:if="${session.user != null}">
+                                <div class="media-left col-lg-1 col-sm-2 col-md-2">
+                                    <img th:src="${session.user.userImg}" src="/images/Jvinh.jpg" class="img-rounded"
+                                         alt="" title="Jvinh" width="40px" height="40px">
+                                </div>
+                                <div class="media-middle col-lg-1 col-sm-2 col-md-2 name-margin">
+                                    <span style="width: 10%;" th:text="${session.user.username}"></span>
+                                </div>
+                                <div class="media-right col-lg-8 col-md-6 col-sm-6">
+                                    <span>
+                                        <input class="form-control" type="text" th:id="'myComment-' + ${diary.id}"/>
+                                    </span>
+
+                                </div>
+                                <button type="button" th:onclick="doComment([[${diary.id}]],[[${diary.creator}]])"
+                                        class="btn btn-success">评论
+                                </button>
+                            </div>
+
+                            <div class="media" th:if="${session.user == null}">
+                                <div class="media-left col-lg-12 col-md-12 col-sm-12 form-control">
+                                    亲，先<a href="/login" style="color: red">登录</a>后再评论
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+
+                <div th:replace="nav :: page"></div>
+
+            </div>
+
+
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-4">
+            <div class="col-lg-12 col-md-12 col-sm-12 time-block">
+                <div class="time font-center">
+                    <span th:text="'今日: ' + ${#dates.format(#dates.createNow(),'yyyy年MM月dd日')}">2019年1月15日</span>
+
+                </div>
+                <div class="col-sm-12 col-lg-12 col-md-12 col-lg-offset-1" th:if="${session.user != null}"
+                     style="margin-top: 10px;">
+                    <span th:text="'当前用户: ' + ${session.user.username}">Jvinh</span><br>
+                    <span th:text="'我的签名: 无'"
+                          th:if="${session.user.bio == null || session.user.bio == ''}">加油,你是最棒的!</span>
+                    <span th:text="'我的签名: ' + ${session.user.bio}"
+                          th:if="${session.user.bio != null && session.user.bio != ''}">加油,你是最棒的!</span>
+                </div>
+
+            </div>
+
+            <div class="col-lg-12 col-md-12 col-sm-12 maybeKnow">
+                <div class="panel panel-default">
+                    <div class="panel-heading">如何发布一篇日记？</div>
+                    <div class="panel-body">
+                        <div class="panel-diary">1. 登录之后，进入到Home。</div>
+                        <br>
+                        <div class="panel-diary">2. 点击创建一个日记本。</div>
+                        <br>
+                        <div class="panel-diary">3. 进入到写日记页面。</div>
+                        <br>
+                        <div style="color: red;" class="panel-diary">4. 选择一个所属的日记本。</div>
+                        <br>
+                        <div class="panel-diary">5. 开始写日记，完成之和点击保存，发布日记。</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 maybeKnow">
+                <div class="panel panel-default">
+                    <div class="panel-heading">我的规划
+                        <button th:onclick="addPlan()"
+                                class="btn btn-default col-lg-offset-7 col-sm-offset-4">添加计划
+                        </button>
+
+                    </div>
+                    <div class="panel-body">
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 maybeKnow">
+                <div class="panel panel-default">
+                    <div class="panel-heading">今日热门话题</div>
+                    <div class="panel-body">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div th:replace="chat/index::chat"></div>
+    </div>
+</div>
+<div th:replace="nav:: beian">
+
+</div>
+<div th:replace="nav :: js"></div>
+<script th:inline="javascript">
+
+    $(document).ready(function () {
+        var diaryId = sessionStorage.getItem("diaryId");
+        if (diaryId !== null && "" !== diaryId) {
+            $("#collapseComment" + diaryId).addClass("in");
+            showComment(diaryId);
+        }
+    });
+
+    function writeDiary() {
+        var user = [[${session.user}]];
+        if (user !== null) {
+            window.location.href = "/home/write";
+            return;
+        }
+        var s = confirm("你还未登录,请先登录?");
+        if (s === true) {
+            window.location.href = "/login";
+        }
+    }
+
+    function addPraise(id) {
+        var user = [[${session.user}]];
+        if (user === null) {
+            alert("您还未登录,不能进行点赞哦!");
+            return;
+        }
+        var praise = $("#praise-" + id);
+        var n = parseInt(praise.text());
+        var b = parseInt(praise.attr("data-add"));
+        var sn;
+        if (b === 1) {
+            sn = ++n;
+            praise.text(sn);
+            praise.attr("data-add", 0);
+        } else if (b === 0) {
+            praise.attr("data-add", 1);
+            sn = --n;
+            praise.text(sn);
+        }
+
+        $.ajax({
+            //请求方式
+            type: "POST",
+            //请求地址
+            url: "/updatePraise",
+            async: false,   //请求是否异步，默认为异步，这也是ajax重要特性
+            //数据，json字符串
+            data: {
+                id: id,
+                likeCount: sn
+            },
+            success: function (data) {
+                console.log(data);
+            },
+            //请求失败，包含具体的错误信息
+            error: function (e) {
+                console.log(e.status);
+                console.log(e.responseText);
+            }
+        });
+    }
+
+
+</script>
+
+
+</body>
+
+</html>

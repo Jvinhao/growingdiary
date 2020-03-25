@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>成长日记-活动详情</title>
+
+    <div th:replace="nav::css">
+
+    </div>
+    <!--<script rel="script" type="javascript" src="js/jquery-1.11.3.min.js"></script>-->
+</head>
+<body>
+<nav class="navbar navbar-default" th:replace="nav::navs">
+    <div class="container-fluid" style="display: flex; flex-direction: row;justify-content: space-around;">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">成长日记</a>
+            <ul class="nav navbar-nav">
+                <li><a href="../index.html">首页<span class="sr-only">(current)</span></a></li>
+                <li><a href="#">大学<span class="sr-only">(current)</span></a></li>
+                <li><a href="#">音乐<span class="sr-only">(current)</span></a></li>
+                <li class="active"><a href="home.html">Home<span class="sr-only">(current)</span></a></li>
+            </ul>
+        </div>
+
+        <div class="collapse navbar-collapse">
+            <form class="navbar-form navbar-left">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="搜索人 ...">
+                </div>
+                <button type="submit" class="btn btn-default">搜索</button>
+            </form>
+        </div>
+
+        <div class="column">
+            <div class="media">
+                <div class="media-left">
+                    <a href="/home">
+                        <img class="media-object img-rounded user-img" src="img/Jvinh.jpg" alt="...">
+                    </a>
+                </div>
+                <div class="media-left">
+                    <a class="glyphicon glyphicon-off user-icon" aria-hidden="true"></a>
+                </div>
+                <div class="media-left">
+                    <span class="glyphicon glyphicon-cog user-icon" aria-hidden="true"></span>
+                </div>
+
+            </div>
+        </div>
+
+
+    </div>
+</nav>
+
+<div class="container-fluid" style="background-color: rgba(219,250,212,0.17)">
+    <div class="col-lg-8 col-lg-offset-2">
+        <div class="col-lg-8 col-sm-8 col-md-8" style="margin: 10px 0;">
+            <span style="font-size: 22px">活动主题:&nbsp;</span>
+            <span th:text="${activity.actName}" style="font-size: 18">东湖游玩
+            </span>
+            <label class="label label-success" style="position: relative;top: -3px;" th:if="${activity.actState == 0}">进行中</label>
+            <label class="label label-danger" style="position: relative;top: -3px; " th:if="${activity.actState == -1}">未开始</label>
+            <label class="label label-warning" style="position: relative;top: -3px; " th:if="${activity.actState == 1}">已结束</label>
+
+        </div>
+        <div class="col-lg-4 col-sm-4 col-md-4" style="float: right; margin-top: 1%; border-bottom: 1px solid mediumaquamarine">
+            <div class="col-lg-6 col-md-6 col-sm-6" aria-hidden="true" title="热度">
+                <img src="/images/hot.png" width="20px"/>&nbsp;热度:<span th:text="${activity.actHot}">4792</span>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6" aria-hidden="true" title="人数">
+                <img src="/images/people.png" width="20px" height="26px"/>&nbsp;人数:<span
+                    th:text="${activity.actPeople}">32</span>
+            </div>
+        </div>
+
+        <div class="col-lg-12" style="letter-spacing:3px">
+
+            <p class="col-sm-12" style="padding: 0;"><span style="font-size: 18px">活动介绍:&nbsp;&nbsp;</span>
+            <p th:text="${activity.actDescription}"></p>
+            </p>
+            <div class="col-lg-12" style="font-size: 13px;letter-spacing:0;">
+                <span style="float: right">开始时间:<span th:text="${#dates.format(activity.actStart,'yyyy-MM-dd HH:mm')}"></span></span><br>
+                <span style="float: right">结束时间:<span th:text="${#dates.format(activity.actEnd,'yyyy-MM-dd HH:mm')}"></span></span>
+            </div>
+        </div>
+        <div class="divider col-lg-12 col-sm-12" style="background: #0f0f0f; height: 1px;margin-top: 4px;"></div>
+        <div class="col-lg-12" style="margin-top: 8px;">
+            <span style="font-size: 18px">参加活动的人：&nbsp;&nbsp;</span>
+            <div id="joinAct">
+
+            </div>
+            <div style="border:2px solid #5cb85c ;border-radius: 8px;margin-top: 16px;">
+                <img th:each="act : ${activity.actUS}" th:src="${act.user.userImg}" class="img-rounded"
+                     style="margin: 10px;" width="50px" height="50px" alt="" th:title="${act.user.username}">
+            </div>
+        </div>
+        <div class="col-lg-12" style="margin-top: 8px;text-align: center">
+            <span style="font-size: 18px" class="col-lg-10">——————————————&nbsp;&nbsp;活动照片:&nbsp;&nbsp;——————————————</span>
+            <div id="photosBtn" class="col-lg-2">
+
+            </div>
+
+            <div class="modal fade" id="photoModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel"><span id="action">上传</span>照片</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form class="form-horizontal" action="/uploadActivityPhotos" method="post">
+                                <div class="form-group">
+                                    <label for="uploadPicture" class="col-sm-3 control-label user-label">照片</label>
+                                    <div class="col-sm-7">
+                                        <input id="uploadPicture" name="file" type="file" multiple
+                                               class="file-input">
+                                        <input type="hidden" id="actId" name="actId" th:value="${activity.id}">
+                                        <input type="hidden" id="cover" name="activityPhoto">
+                                        <!--<input type="file" class="form-control" id="cover" placeholder="封面" name="cover">-->
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                    <button type="submit" class="btn btn-primary">保存</button>
+                                </div>
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-12" style="display: flex;flex-wrap: wrap;">
+                <img th:each="activityVo : ${activityVos}" th:src="${activityVo.actImage}" alt="..."
+                     class="img-thumbnail" width="22%"
+                     style="height:160px;!important; margin: 5px 10px;">
+            </div>
+        </div>
+        <div class="col-lg-12" style="margin-top: 15px;">
+            <span style="font-size: 18px;">活动评论&nbsp;(42)</span>
+            <div class="media" th:if="${session.user != null}">
+                <div class="media-left col-lg-1 col-sm-1 col-md-1">
+                    <img th:src="${session.user.userImg}" src="/images/Jvinh.jpg" class="img-circle"
+                         alt="" title="Jvinh" width="50px" height="50px" style="margin-left: -8px;margin-bottom: 4px;">
+                </div>
+                <div class="media-middle col-lg-1 col-sm-1 col-md-1 name-margin" style="padding: 0px;font-size: 14px;
+    position: relative;left: -9px;">
+                    <span style="width: 10%;" th:text="${session.user.username}"></span>
+                </div>
+                <div class="media-right col-lg-8 col-md-8 col-sm-7" style="margin-left: -45px;">
+                    <span>
+                        <input class="form-control" type="text" th:id="'myAct-' + ${activity.id}"/>
+                    </span>
+                </div>
+                <button type="button" th:onclick="doAcm([[${activity.id}]])"
+                        class="btn btn-success">评论
+                </button>
+            </div>
+            <div class="col-lg-12 col-sm-12 divider" style="margin: 5px 0;height: 1px;background-color: #5cb85c"></div>
+            <div th:if="${activityComments.size() == 0}">
+                <span>还没有任何评论哦！</span>
+            </div>
+            <div th:each="comment : ${activityComments}" class="col-lg-12 col-sm-12 col-md-12"
+                 style="padding: 0;margin-left: -8px;margin-bottom: 8px;margin-top: 13px;">
+                <img th:src="${comment.user.userImg}" class="img-circle col-lg-1 col-sm-1 col-md-1" width="50px" height="50px" alt="">
+                <div class="col-lg-10 col-sm-10 col-md-10" style="padding: 0; margin: 2px;">
+                    <span style="font-size: 15px;" th:text="${comment.user.username}">jvinh</span> ：<span></span><span
+                        th:text="${comment.commentContent}">今天捕捉到一条鱼，哈哈哈哈</span>
+                    <br>
+                    <span style="font-size: 13px;margin-top: 8px;"
+                          th:text="${#dates.format(comment.createTime,'yyyy-MM-dd HH:mm')}">2020-03-19 15:25</span>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+<div th:replace="nav::js">
+
+</div>
+<script th:inline="javascript">
+    var control = $('#' + "uploadPicture");
+    control.fileinput({
+        uploadUrl: "/doUploadImage",
+        previewFileType: "image",
+        uploadAsync: true,
+        showCaption: false,
+        allowedFileExtensions: ["png", "jpg", "jpeg", "ico", "bmp", "gif"],
+        maxFileCount: 1,
+        maxFileSize: 3072,
+        showBrowse: true,
+        dropZoneTitle: '照片',
+        browseLabel: "选择照片",
+        uploadClass: "btn btn-info",
+        uploadLabel: "上传",
+        removeClass: "btn btn-danger",
+        autoReplace: true,
+        removeLabel: "移除",
+        msgSizeTooLarge: '图片文件太大！',
+        msgFilesTooMany: "选择上传的文件数量为({n}) 超过允许的最大数值({m})！",
+        msgUploadEnd: '图片上传成功！',
+        msgUploadBegin: '初始化中...',
+        msgZoomModalHeading: '图片详情预览',
+        msgInvalidFileExtension: '非法文件扩展名 "{name}"！ 仅支持 "{extensions}" 的文件扩展名！'
+    }).on('fileerror', function (event, data, msg) {
+        alert('图片上传失败！' + msg);
+    }).on('fileuploaded', function (event, data) {
+        var imageUrl = data.response.data;
+        if (imageUrl != null) {
+            $("#cover").val(imageUrl);
+        }
+    }).on('fileclear', function (event) {
+        alert("图片被清除啦！");
+    });
+
+    $(document).ready(function () {
+        var actuser = [[${activity.actUS}]];
+        var userId = $("#userId").val();
+        for (var i = 0; i < actuser.length; i++) {
+            if (actuser[i].user.id == userId) {
+                $("#photosBtn").append("<button style= 'float:right' class= 'btn btn-success' data-toggle= 'modal' data-target= '#photoModal'>上传照片</button>");
+                return;
+            }
+        }
+        $("#joinAct").append("<button style='position: relative;top: -25px;float: right' class='btn btn-primary' onclick='join()'>参加活动</button>");
+    });
+
+    function doAcm(actId) {
+        var actContent = $("#myAct-" + actId).val();
+        if ("" === actContent || actContent === null) {
+            alert("请输入评论内容哦");
+            return;
+        }
+        $.ajax({
+            type: "GET",
+            async: false,
+            data: {
+                actId: actId,
+                actContent: actContent
+            },
+            url: "/activity/actComment",
+            success: function (data) {
+                if (data.code === 200) {
+                    window.location.reload();
+                }
+            }
+        })
+    }
+
+    function join() {
+        var userId = $("#userId").val();
+        if (null == userId || userId === "" || userId === undefined) {
+            alert("亲先登录哦");
+            return;
+        }
+
+        window.wxc.xcConfirm("<span>确定参加此活动吗？</span>", "confirm", {
+            onOk: function () {
+                new Date().toLocaleTimeString();
+                if ([[activity.actEnd]])
+                    $.ajax({
+                        type: "GET",
+                        async: false,
+                        data: {
+                            actId: [[${activity.id}]]
+                        },
+                        url: "/activity/joinActivity",
+                        success: function (data) {
+                            if (data.code === 200) {
+                                window.location.reload();
+                            }
+                        }
+                    })
+            }
+        });
+
+    }
+
+
+</script>
+</body>
+
+</html>

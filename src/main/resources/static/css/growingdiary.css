@@ -1,0 +1,184 @@
+/*@font-face {*/
+/*font-family: MyCustomFont;*/
+/*src: url("../fonts/happily.svg") !* EOT file for Google *!;*/
+/*src: url("../fonts/happily.eot");*/
+/*src: url("../fonts/happily.ttf");*/
+/*}*/
+
+body {
+    background: rgba(210,210,210,0.39);
+    font-size: 16px;
+    font-family: sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.column {
+    margin: auto 0;
+}
+
+.media-content {
+    margin: 15px auto;
+    background: #f3f3f3;
+    border: 1px solid green;
+    border-radius: 10px
+}
+
+.maybeKnow {
+    width: 100%;
+    margin-left: -15px;
+    margin-top: 20px;
+}
+
+.user-img {
+    width: 44px;
+    height: 44px;
+}
+
+.user-icon {
+    width: 46px;
+    height: 46px;
+    text-align: center;
+    vertical-align: middle;
+    display: table-cell
+}
+
+.user-icon:hover {
+    background: #eeeeee;
+    cursor: pointer
+}
+
+.user-label {
+    font-weight: 200 !important;
+}
+
+
+.span-delete {
+    float: right;
+    width: 20px;
+    height: 20px;
+    /*垂直居中*/
+    text-align: center;
+    vertical-align: middle;
+    display: table-cell
+}
+
+.span-delete:hover {
+    background: #eeeeee;
+    cursor: pointer;
+
+
+}
+
+.ck-editor__editable {
+    min-height: 200px;
+}
+
+
+.panel-information {
+    display: flex;
+    justify-content: space-around;
+    line-height: 25px;
+    margin-bottom: 5px;
+}
+
+.form-css {
+    margin: 20px auto;
+    width: 300px;
+}
+
+.form-change {
+    margin-bottom: 5px !important;
+}
+
+.well-span {
+    width: 300px;
+    margin-left: 25px;
+    height: 79px;
+    font-weight: bold;
+    color: springgreen;
+}
+
+.form-register {
+    background: #ffffff;
+    opacity: 0.6;
+    margin-top: 5%;
+    border-radius: 5px;
+}
+
+.register-success {
+    color: #999999;
+    background: white;
+    height: 160px;
+    width: 800px;
+    opacity: 0.6;
+    font-size: 17px;
+    font-weight: 200;
+
+    border-radius: 10px;
+    text-align: center;
+    vertical-align: middle;
+    display: table-cell
+
+}
+
+.font-center {
+    vertical-align: middle;
+    display: table-cell
+}
+
+.register-bg {
+    background: url('../images/register.jpg') no-repeat;
+    background-size: cover;
+}
+
+@media screen and (max-width: 718px) {
+    .sure-pass {
+        margin-left: 38px;
+    !important;
+    }
+}
+
+.panel-diary {
+    margin: -6px auto;
+    padding-left: 15px;
+}
+
+.bootstrap-switch-container {
+    margin-top: 0.8px;
+}
+
+.com-info:hover {
+    background-color: #f0f0f0;
+}
+
+.beian {
+    background-color: #999999;
+    color: white;
+
+}
+
+.time-block {
+    margin-left: -15px;
+}
+
+.time {
+    background: #5cb85c;
+    height: 60px;
+    opacity: 0.6;
+    color: black;
+    font-size: 20px;
+    border-radius: 5px;
+
+    width: 445px;
+    text-align: center;
+}
+.lb-info {
+    position: relative;
+    top: 8px;
+}
+
+

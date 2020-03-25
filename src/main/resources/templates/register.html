@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>成长日记-注册</title>
+    <style>
+        .error {
+            color: red;
+            margin-left: 28px;
+            margin-top: -10px;
+        }
+    </style>
+
+    <div th:replace="nav :: css"></div>
+</head>
+<body class="register-bg">
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-3 col-sm-5 col-md-5 col-lg-offset-7 col-md-offset-3 col-sm-offset-3"
+             style="background: #ffffff;opacity: 0.6;margin-top: 5%;border-radius: 5px;">
+            <form action="/doRegister" method="post" id="register-form">
+                <div class="form-group col-lg-12 form-change" style="color: red">
+                    <h3 style="margin-left: 20%">欢迎注册成长日记</h3>
+                    <h4 style="float: right">——记录下你每天的成长</h4>
+                </div>
+                <div class="form-group form-change">
+                    <input type="text" class="form-control form-css" id="username" placeholder="昵称" name="username"
+                        autocomplete="off"   onKeypress="javascript:if(event.keyCode == 32)event.returnValue = false;">
+                </div>
+                <div class="form-group form-change">
+                    <input type="password" class="form-control form-css" id="password" placeholder="密码" name="password"
+                           required="required" oninvalid="setCustomValidity('请输入密码')"
+                           data-toggle="collapse" onclick="showInfo()" aria-expanded="false"
+                           aria-controls="inputInfo"
+                           onKeypress="javascript:if(event.keyCode == 32)event.returnValue = false;">
+                    <div class="collapse form-group sure-pass" id="inputInfo">
+                        <div class="well well-span">
+                            <span>1.请输入6-10位数的密码</span><br>
+                            <span>2.确保两次密码一致</span>
+
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="form-group form-change">
+                    <input type="password" class="form-control form-css" id="confirmPassword" placeholder="确认密码"
+                           name="confirmPassword" onclick="removeInfo()"
+                           onKeypress="javascript:if(event.keyCode == 32)event.returnValue = false;">
+                </div>
+
+                <div class="form-group form-change">
+                    <input type="email" class="form-control form-css" id="email" placeholder="邮箱" name="email"
+                           required="required" oninput="setCustomValidity('')" oninvalid="setCustomValidity('请输入邮箱')"
+                           onKeypress="javascript:if(event.keyCode == 32)event.returnValue = false;">
+                    <span id="errorMsg" style="color: red;margin-left: 10%;"></span>
+                </div>
+
+                <div class="form-group form-change">
+                    <button type="submit" class="form-control btn-default form-css">注册</button>
+                </div>
+
+                <div class="col-lg-offset-2 col-md-offset-2 col-sm-offset-2" style="height: 40px">
+                    <span style="margin-right: 20px;">已有账号?</span><a href="/login">点击登录</a>
+                </div>
+
+            </form>
+        </div>
+
+    </div>
+</div>
+
+<div th:replace="nav :: js"></div>
+
+<script>
+    $().ready(function () {
+        $("#register-form").validate({
+
+            rules: {
+                password: {
+                    required: true,
+                    minlength: 6
+                },
+                confirmPassword: {
+                    required: true,
+                    minlength: 5,
+                    equalTo: "#password"
+                },
+                email: {
+                    required: true,
+                    email: true
+                }
+            },
+            messages: {
+                password: {
+                    required: "请输入密码",
+                    minlength: "密码长度不能小于 6 个字母"
+                },
+                confirm_password: {
+                    required: "请输入密码",
+                    minlength: "密码长度不能小于 6 个字母",
+                    equalTo: "两次密码输入不一致"
+                },
+                email: {
+                    required:"请输入一个正确的邮箱"
+                }
+            }
+
+        })
+    });
+
+    function removeInfo() {
+        $("#inputInfo").removeClass("in");
+    }
+
+    function showInfo() {
+        $("#inputInfo").addClass("in");
+    }
+
+    $("#username").blur(function () {
+        $.ajax({
+            type: "post",
+            data: {
+                username: $("#username").val()
+            },
+            url: "/checkUserName",
+            async: true,
+            success: function (data) {
+                console.log(data);
+                if (data.code === 200) {
+                    $("#username").nextAll().remove();
+                    $("#username").after("<span style='color: green;margin-left: 8%'>" + data.data+ "</span>");
+                    $(".btn-default").prop("disabled",false);
+
+                } else {
+                    $("#username").nextAll().remove();
+                    $("#username").after("<span style='color: red;margin-left: 8%'>" + data.message+ "</span>");
+                    $(".btn-default").prop("disabled",true);
+
+                }
+            }
+        });
+
+    })
+
+
+</script>
+</body>
+</html>

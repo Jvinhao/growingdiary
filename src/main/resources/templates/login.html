@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>成长日记-登录</title>
+
+    <link href="/css/login.css" th:href="@{/css/login.css}" rel="stylesheet"/>
+    <link href="/css/growingdiary.css" th:href="@{/css/growingdiary.css}" />
+    <!--<div th:replace="nav :: css"></div>-->
+</head>
+<body style=" font-size: 16px;">
+<!-- main -->
+<div class="dowebok col-lg-10">
+    <div class="logo"></div>
+    <form action="/doLogin" method="post">
+        <h3 class="title">登录——寻找你的Home</h3>
+        <div class="item ">
+            <input name="username" id="username" type="text" placeholder="用户名/邮箱" autocomplete="off"
+                   onclick="removeErrorMsg()" required oninput="setCustomValidity('')"
+                   oninvalid="setCustomValidity('用户名不能为空')">
+            <input name="password" id="password" type="password" placeholder="登录密码" onclick="removeErrorMsg()"
+                   autocomplete="off" required oninput="setCustomValidity('')" oninvalid="setCustomValidity('密码不能为空')">
+            <span th:text="${errorMsg}" th:if="${errorMsg != null}" id="errorMsg" class="errorMsg"></span>
+            <div class="other-login">
+                <span>其他方式登录:</span>
+                <a href="javascript:void(0);" onclick="qqLogin()"><img src="/images/QQ.png" alt="" class="QQ-login"></a>
+            </div>
+            <button id="submit">登录</button>
+
+            <div class="reg">
+                <a class="bar" href="/register">立即注册</a>
+                <a class="forget" href="/forget">忘记密码</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div th:replace="nav :: js"></div>
+<script>
+    function removeErrorMsg() {
+        $("#errorMsg").html("");
+        $("#errorMsg").css("display","none");
+    }
+
+
+</script>
+
+</body>
+</html>

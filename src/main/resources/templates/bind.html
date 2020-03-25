@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>成长日记-绑定用户</title>
+    <div th:replace="nav :: css"></div>
+    <style>
+        a:hover {
+            text-underline: none;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-default" th:replace="nav :: navs">
+</nav>
+
+<div class="container-fluid" style="height: 615px;">
+    <div class="row">
+        <div class="col-lg-3 col-sm-3"></div>
+        <div class="col-lg-5" style="border-radius:10px;margin-left: 4%; height: 400px;background: #ffffff ">
+            <h4 style="text-align: center">成长日记-绑定用户</h4>
+            <div class="col-lg-offset-1 col-lg-10 divider" style="background: #5bc0de"></div>
+            <form method="post" action="/bindUser" class="form-horizontal col-lg-offset-2" style="margin-top: 10%;">
+                <div class="form-group">
+                    <label for="email" class="col-sm-3 col-lg-2 col-md-2 control-label">邮箱</label>
+                    <div class="col-sm-6 col-lg-6 col-sm-6">
+                        <input type="email" class="form-control" id="email" name="email" style="border:0.5px solid #fac090" autocomplete="off"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="password" class="col-sm-3 col-lg-2 col-md-2 control-label">密码</label>
+                    <div class="col-sm-6 col-lg-6 col-sm-6">
+                        <input type="password" class="form-control" id="password"
+                               name="password" style="border:0.5px solid #fac090" autocomplete="off"/>
+                    </div>
+                </div>
+                <span th:value="${errMsg}" th:if="${errMsg != null}" style="color: red"></span>
+                <button type="submit" style="position: relative;width: 90px;left: 5px;" class="btn btn-default col-lg-offset-2 col-sm-offset-4">确认
+                </button>
+                <a href="/quickRegister" type="button" class="btn btn-success col-lg-offset-1 col-sm-offset-1">QQ快速注册</a>
+            </form>
+        </div>
+    </div>
+</div>
+<div th:replace="nav:: beian">
+
+</div>
+
+
+</body>
+
+</html>

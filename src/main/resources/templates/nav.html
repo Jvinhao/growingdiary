@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>成长日记-首页</title>
+    <div th:fragment="css">
+        <link rel="shortcut icon" href="/favicon.ico" th:href="@{/favicon.ico}" type="image/x-icon">
+        <link rel="stylesheet" href="/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}">
+        <!--<link rel="stylesheet" href="/css/index.css" th:href="@{/css/index.css}">-->
+        <link rel="stylesheet" href="/css/bootstrap-datetimepicker.min.css"
+              th:href="@{/css/bootstrap-datetimepicker.min.css}">
+        <link rel="stylesheet" href="/css/fileinput.css" th:href="@{/css/fileinput.css}">
+        <link rel="stylesheet" href="/css/growingdiary.css" th:href="@{/css/growingdiary.css}">
+        <link rel="stylesheet" href="/css/play_list.css" th:href="@{/css/play_list.css}">
+        <link rel="stylesheet" href="/css/xcConfirm.css" th:href="@{/css/xcConfirm.css}">
+
+        <link rel="stylesheet" type="text/css" th:href="@{/fonts/iconfont.css}">
+        <link rel="stylesheet" type="text/css" th:href="@{/css/chat.css}">
+        <link rel="stylesheet" type="text/css" th:href="@{/css/chatsearch.css}">
+    </div>
+
+
+    <!--<script rel="script" type="javascript" src="js/jquery-1.11.3.min.js"></script>-->
+</head>
+<body>
+<nav class="navbar navbar-default" th:fragment="navs">
+    <div class="container-fluid" style="display: flex; flex-direction: row;justify-content: space-around;">
+        <div class="navbar-header col-lg-5 col-md-5 col-sm-5">
+            <ul class="nav navbar-nav">
+                <li>
+                    <h4 style="width: 85px;height: 49px;" class="font-center">成长日记</h4>
+                </li>
+                <li style="display:inline" th:classappend="${title == 'index'} ? 'active' :''"><a href="/">首页<span
+                        class="sr-only">(current)</span></a></li>
+                <li th:classappend="${title == 'activity'} ? 'active' :''"><a href="/activity">活动<span
+                        class="sr-only">(current)</span></a></li>
+                <li th:classappend="${title == 'together'} ? 'active' :''"><a href="#">共创<span
+                        class="sr-only">(current)</span></a></li>
+                <li onclick="toHome()" th:classappend="${title == 'home'} ? 'active' :''"><a href="#">Home<span
+                        class="sr-only">(current)</span></a></li>
+            </ul>
+        </div>
+
+        <div class="collapse navbar-collapse">
+            <form class="navbar-form navbar-left">
+                <div class="form-group">
+                    <input type="text" class="form-control" name="search" placeholder="还未实现哦！ ...">
+                </div>
+                <button type="submit" class="btn btn-default">搜索</button>
+            </form>
+        </div>
+
+        <div class="column">
+            <div th:if="${session.user == null}">
+                <a href="/login" class="btn btn-default" style="font-size: 14px">
+                    登录
+                </a>
+                <a href="/register" class="btn btn-default" style="font-size: 14px">
+                    注册
+                </a>
+            </div>
+            <div class="media" th:if="${session.user != null}">
+                <div class="media-left">
+                    <a href="/home">
+                        <img class="media-object img-rounded user-img" th:src="${session.user.userImg}"
+                             src="img/Jvinh.jpg" alt="...">
+                    </a>
+                </div>
+                <input type="hidden" th:value="${session.user.id}" id="userId">
+                <div class="media-left" onclick="quit()">
+                    <span class="glyphicon glyphicon-off user-icon" aria-hidden="true"></span>
+                </div>
+                <div class="media-left com-info" th:title="你有新的 + ${session.unRead} + 个通知">
+                    <a href="/diaryList" th:href="@{/home/diaryList}" style="margin-top: 4px;display: block;">
+                        <img src="/images/info.png" width="40px" th:src="@{/images/info.png}">
+                        <span class="badge" style="margin-left: -5px;" th:text="${session.unRead}">42</span>
+                    </a>
+                </div>
+
+
+            </div>
+        </div>
+
+
+    </div>
+</nav>
+
+<nav aria-label="Page navigation" th:fragment="page">
+
+    <div th:if="${diaryList.totalPages <= 0}" style="margin-top: 20px;color: red;font-size: 18px">
+        <p aria-hidden="true">还没有写任何日记哦，快来写一篇日记吧！！</p>
+    </div>
+    <ul class="pagination col-lg-7" th:if="${diaryList.totalPages > 0}">
+        <li>
+            <a>
+                <span aria-hidden="true">总页数:[[${diaryList.totalPages}]]</span>
+            </a>
+        </li>
+        <li th:if="${diaryList.number == 0}" th:classappend="${diaryList.number == 0} ? 'disabled' : '' ">
+            <span href="#" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </span>
+        </li>
+        <li th:if="${diaryList.number != 0}">
+            <a href="#" aria-label="Previous" th:href="@{?page={page}(page=${diaryList.number})}">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+
+        <li th:if="${diaryList.totalPages > 5} and ${diaryList.number+4 < diaryList.totalPages }"
+            th:each="i : ${#numbers.sequence(diaryList.number+1 , diaryList.number + 5)}"
+            th:classappend="${(diaryList.number + 1) eq i} ? 'active' : ''">
+            <a th:href="@{?page={page}(page=${i})}"
+               th:text="${i}" class="">1</a></li>
+
+        <li th:if="${diaryList.totalPages > 5} and ${diaryList.number+4 >= diaryList.totalPages }"
+            th:each="i : ${#numbers.sequence(diaryList.totalPages-4 , diaryList.totalPages)}"
+            th:classappend="${(diaryList.number + 1) eq i} ? 'active' : ''">
+            <a th:href="@{?page={page}(page=${i})}"
+               th:text="${i}" class="">1</a></li>
+
+
+        <li th:each="i : ${#numbers.sequence(1, diaryList.totalPages)}" th:if="${diaryList.totalPages <= 5}"
+            th:classappend="${(diaryList.number + 1) eq i} ? 'active' : ''">
+            <a th:href="@{?page={page}(page=${i})}"
+               th:text="${i}" class="">1</a>
+
+        <li th:if="${diaryList.number == diaryList.totalPages-1}"
+            th:classappend="${diaryList.number == diaryList.totalPages-1} ? 'disabled' : '' ">
+            <span href="#" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </span>
+        </li>
+        <li th:if="${diaryList.number != diaryList.totalPages-1}">
+            <a href="#" aria-label="Previous" th:href="@{?page={page}(page=${diaryList.number+2})}">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+
+
+    </ul>
+
+</nav>
+
+<div class="col-lg-2 col-md-3 col-sm-3" th:fragment="tabar">
+    <div class="list-group text-center">
+        <a href="/home" class="list-group-item" th:classappend="${action == '1'}? 'active':''">
+            我的成长日记本
+        </a>
+        <a href="/home/diaryList" class="list-group-item" th:classappend="${action == '2'}? 'active':''">我写过的日记</a>
+        <a href="/home/activity" class="list-group-item" th:classappend="${action == '7'}? 'active':''">我的活动</a>
+        <a href="#" class="list-group-item" th:classappend="${action == '3'}? 'active':''">我上传的相册</a>
+        <a href="/home/write" class="list-group-item" th:classappend="${action == '4'}? 'active':''">写日记</a>
+        <a href="/home/self" class="list-group-item" th:classappend="${action == '5'}? 'active':''">个人资料</a>
+        <a href="#" class="list-group-item" th:classappend="${action == '6'}? 'active':''">设置中心</a>
+    </div>
+</div>
+
+
+<div class="beian col-lg-12" th:fragment="beian">
+    <p style="text-align: center">Copyright © 2020-now 成长日记</p>
+    <p style="text-align: center"><a target="_blank" href="http://beian.miit.gov.cn">鄂ICP备 20002050号-1</a>
+    </p>
+</div>
+
+
+<div th:fragment="js">
+    <!--<script-->
+    <!--src="https://code.jquery.com/jquery-1.12.4.js"-->
+    <!--integrity="sha256-Qw82+bXyGq6MydymqBxNPYTaUXXq7c8v3CwiYwLLNXU="-->
+    <!--crossorigin="anonymous"></script>-->
+    <script rel="script" src="/js/jquery-1.11.3.min.js" th:src="@{/js/jquery-1.11.3.min.js}"></script>
+    <script rel="script" src="/js/bootstrap.js" th:src="@{/js/bootstrap.js}"></script>
+    <!--<script src="https://cdn.ckeditor.com/ckeditor5/16.0.0/classic/ckeditor.js"></script>-->
+    <script rel="script" src="/js/bootstrap-datetimepicker.min.js"></script>
+    <script rel="script" src="/js/fileinput.js" th:src="@{/js/fileinput.js}"></script>
+    <script rel="script" src="/js/fileinput_locale_zh.js" th:src="@{/js/fileinput_locale_zh.js}"></script>
+    <script rel="script" src="/js/jquery.popconfirm.js" th:src="@{/js/jquery.popconfirm.js}"></script>
+    <script rel="script" src="/js/growingdiary.js" th:src="@{/js/growingdiary.js}"></script>
+    <script rel="script" src="/js/jquery.validate.js" th:src="@{/js/jquery.validate.js}"></script>
+    <script rel="script" src="/js/messages_zh.js" th:src="@{/js/messages_zh.js}"></script>
+    <script rel="script" src="/js/swiper.js" th:src="@{/js/swiper.js}"></script>
+    <script type="text/javascript" th:src="@{/js/JsonpAjax.js}"></script>
+    <script type="text/javascript" th:src="@{/js/xcConfirm.js}"></script>
+
+
+    <script th:inline="javascript">
+        function toHome() {
+            var user = [[${session.user}]];
+            if (user !== null) {
+                window.location.href = "/home";
+                return;
+            }
+            var s = confirm("你还未登录,请先登录?");
+            if (s === true) {
+                window.location.href = "/login";
+            }
+        }
+
+        function quit() {
+            var b = confirm("你真的要退出吗?");
+            if (b === true) {
+                window.location.href = "/logout";
+            }
+        }
+    </script>
+
+    <script th:inline="javascript">
+
+        var userid = $("#inputId").val();
+        var contatorId;
+
+
+        //定义websocket
+        let wsUrl = "ws://182.92.198.237:8080/wschat/" + userid; // websocket链接
+        var lockReconnect = false;//避免重复连接
+        var socket;
+
+        function createWebSocket() {
+            try {
+                socket = new WebSocket(wsUrl);
+                websocketInit();
+            } catch (e) {
+                console.log('catch');
+                websocketReconnect(wsUrl);
+            }
+        }
+
+
+        function websocketInit() {
+            // 建立 web socket 连接成功触发事件
+            socket.onopen = function (evt) {
+                onOpen(evt);
+            };
+            // 断开 web socket 连接成功触发事件
+            socket.onclose = function (evt) {
+                websocketReconnect(wsUrl);
+                onClose(evt);
+            };
+            // 接收服务端数据时触发事件
+            socket.onmessage = function (evt) {
+
+                onMessage(evt);
+            };
+            // 通信发生错误时触发
+            socket.onerror = function (evt) {
+                websocketReconnect(wsUrl);
+                onError(evt);
+            };
+        };
+
+        function onOpen(evt) {
+            //心跳检测重置
+            heartCheck.start();
+        }
+
+        function onClose(evt) {
+        }
+
+        function onMessage(evt) {
+
+            var data = JSON.parse(evt.data);
+
+            var to;
+            var from;
+            if (data.toString() !== 'hello') {		// 对后端传过来的数据正常处理
+                //判断是不是当前正在联系人的联系人
+                //如果是，就显示，如果不是，不进行显示
+                var curUser = $("#curcontactot").attr("cid");
+                // 重新拉取一遍当前联系人未读消息条数 jquery显示出去
+                to = data['toUserId'];
+                from = data['fromUserId'];
+
+
+                if (from == curUser) showdata(data);
+                $.ajax({
+                    type: "GET",
+                    url: "/chat/countUnreadNumOneToOne",
+                    data: {
+                        from: from,
+                        to: to
+                    },
+                    dataType: "JSON",
+                    success: function (result) {
+                        //显示数字
+                        var num = result.data;
+                        //对显示数字进行修改
+                        var cur = $("#" + from);
+                        cur.find(".message-num").html(num);
+                    }
+                });
+                //检查一下是否是好友关系
+                // $.ajax({
+                //     type: "GET",
+                //     url: "/chat/checkIsRelation",
+                //     data: {id1:userid,
+                //         id2:from,
+                //     },
+                //     dataType: "JSON",
+                //     success: function(result) {
+                //
+                //         if(result['code'] == 400) {
+                //             //单向保存
+                //             alert("单项保存");
+                //             save(userid,from);
+                //             //拉一下好友
+                //             getContators();
+                //         }
+                //     }
+                // });
+                //重新拉取好友和未读消息
+                getUnread();
+                getContators();
+            }
+
+            //拿到任何消息都说明当前连接是正常的
+            heartCheck.start();
+        }
+
+        function websocketReconnect(url) {
+            if (lockReconnect) {       // 是否已经执行重连
+                return;
+            }
+            ;
+            lockReconnect = true;
+            //没连接上会一直重连，设置延迟避免请求过多
+            tt && clearTimeout(tt);
+            var tt = setTimeout(function () {
+                createWebSocket(url);
+                lockReconnect = false;
+            }, 5000);
+        }
+
+        //心跳检测
+        var heartCheck = {
+            timeout: 30000,
+            timeoutObj: null,
+            serverTimeoutObj: null,
+            start: function () {
+                console.log('start');
+                var self = this;
+                this.timeoutObj && clearTimeout(this.timeoutObj);
+                this.serverTimeoutObj && clearTimeout(this.serverTimeoutObj);
+                this.timeoutObj = setTimeout(function () {
+                    //发送测试信息，后端收到后，返回一个消息，
+                    socket.send("ping");
+                    self.serverTimeoutObj = setTimeout(function () {
+                        socket.close();
+                    }, self.timeout);
+                }, this.timeout)
+            }
+        }
+
+        function onError(evt) {
+            console.log('通信错误：' + evt.data);
+        }
+
+
+        $(function () {
+
+            if (checkIsLogin()) {
+                getContators();
+                getUnread();
+                //登录成功创建websocket对象
+                createWebSocket();			// 创建websocket
+            }
+
+        });
+
+        //检查登录
+        function checkIsLogin() {
+            var userid = $("#inputId").val();
+            if (userid == "" || userid == null || userid == undefined) {
+                return false;
+            }
+            return true;
+        }
+
+        //拉取联系人和未读消息数目
+        function getContators() {
+            $(".chatBox-list").empty();
+            var userid = $("#inputId").val();
+            $.ajax({
+                type: "GET",
+                url: "/chat/getContactors",
+                data: {userId: userid},
+                dataType: "JSON",
+                success: function (result) {
+                    var data = result['data'];
+                    //拿到自己头像路径
+                    for (var i = 0; i < data.length; i++) {
+                        var p = data[i];
+                        var name = p['contactor']['username'];
+                        var img = p['contactor']['userImg'];
+                        var unread = p['unReadNum'];
+                        if (unread == 0) {
+                            unread == ""
+                        }
+                        ;
+                        var id = p['contactor']['id'];
+                        tr = '<div class="chat-list-people" id=' + id + '>' +
+                            '<div><img src=' + img + ' alt="头像"></div>' +
+                            ' <div class="chat-name">' +
+                            '<p>' + name + '</p>' +
+                            '</div>' +
+                            '<div class="message-num">' + unread + '</div>' +
+                            '</div>';
+                        $(".chatBox-list").append(tr);
+                    }
+                }
+            });
+        }
+
+        //检查所有未读数目
+        function getUnread() {
+            var userid = $("#inputId").val();
+            $.ajax({
+                type: "GET",
+                url: "/chat/countUnreadNum",
+                data: {userId: userid},
+                dataType: "JSON",
+                success: function (result) {
+                    //显示数字
+                    var num = result.data;
+                    $('.chat-message-num').html(num);
+                }
+            });
+        }
+
+        //初始化聊天界面
+        screenFuc();
+
+        function screenFuc() {
+            var topHeight = $(".chatBox-head").innerHeight();//聊天头部高度
+            //屏幕小于768px时候,布局change
+            var winWidth = $(window).innerWidth();
+            if (winWidth <= 768) {
+                var totalHeight = $(window).height(); //页面整体高度
+                $(".chatBox-info").css("height", totalHeight - topHeight);
+                var infoHeight = $(".chatBox-info").innerHeight();//聊天头部以下高度
+                //中间内容高度
+                $(".chatBox-content").css("height", infoHeight - 46);
+                $(".chatBox-content-demo").css("height", infoHeight - 46);
+
+                $(".chatBox-list").css("height", totalHeight - topHeight);
+                $(".chatBox-kuang").css("height", totalHeight - topHeight);
+                $(".div-textarea").css("width", winWidth - 106);
+            } else {
+                $(".chatBox-info").css("height", 495);
+                $(".chatBox-content").css("height", 448);
+                $(".chatBox-content-demo").css("height", 448);
+                $(".chatBox-list").css("height", 495);
+                $(".chatBox-kuang").css("height", 495);
+                $(".div-textarea").css("width", 260);
+
+                $(".chatBox").css("display", "none");
+
+            }
+        }
+
+        (window.onresize = function () {
+            screenFuc();
+        })();
+        //未读信息数量为空时
+        var totalNum = $(".chat-message-num").html();
+        if (totalNum == "") {
+            $(".chat-message-num").css("padding", 0);
+        }
+        $(".message-num").each(function () {
+            var wdNum = $(this).html();
+            if (wdNum == "") {
+                $(this).css("padding", 0);
+            }
+        });
+
+        //打开/关闭聊天框
+        $(".chatBtn").click(function () {
+            //判断是否登录
+            if ([[${session.user}]] == null) {
+                var s = confirm("你还未登录,请先登录?");
+                if (s === true) {
+                    window.location.href = "/login";
+                }else {
+                    return;
+                }
+            }
+            $(".chatBox").toggle(10);
+
+
+        })
+        $(".chat-close").click(function () {
+            $(".chatBox").toggle(10);
+        })
+
+        //进聊天页面
+        $(document).on("click", ".chat-list-people", function () {
+            //清空
+            $("#word").css("display", "none");
+            var n = $(this).index();
+            var cur = $(this);
+            $(".chatBox-head-one").toggle();
+            $(".chatBox-head-two").toggle();
+            $(".chatBox-list").fadeToggle();
+            $(".chatBox-kuang").fadeToggle();
+
+            //传名字
+            $(".ChatInfoName").text($(this).children(".chat-name").children("p").eq(0).html());
+
+            //传头像
+            $(".ChatInfoHead>img").attr("src", $(this).children().eq(0).children("img").attr("src"));
+
+
+            //查找对应的聊天记录回显出去 ajax
+
+
+            //当前联系人的id
+            var contatorId = $(this).attr('id');
+
+            //全局设置一下contatorId
+
+
+            //设置websocket发送的id
+            $("#curcontactot").attr("cid", contatorId);
+
+
+            $.ajax({
+                type: "GET",
+                url: "/chat/Message",
+                data: {
+                    hostId: userid,
+                    contatorId: contatorId,
+                },
+                dataType: "JSON",
+                success: function (result) {
+                    var data = result['data'];
+                    //回显函数 先消灭所有的
+                    $(".chatBox-content-demo").empty();
+                    for (var i = 0; i < data.length; i++) {
+                        showdata(data[i]);
+                    }
+                }
+            });
+            //清零未读条数
+            $.ajax({
+                type: "GET",
+                url: "/chat/clearUnread",
+                data: {
+                    hostId: userid,
+                    contatorId: contatorId,
+                },
+                success: function () {
+                    //1.清零聊天数字
+                    cur.find(".message-num").html(0);
+
+                    //全部设置为已读
+                    getUnread();
+                }
+            });
+
+            //聊天框默认最底部
+            $(document).ready(function () {
+                $("#chatBox-content-demo").scrollTop($("#chatBox-content-demo")[0].scrollHeight);
+            });
+        });
+
+        //返回列表
+        $(".chat-return").click(function () {
+            $(".chatBox-head-one").toggle(1);
+            $(".chatBox-head-two").toggle(1);
+            $(".chatBox-list").fadeToggle(1);
+            $(".chatBox-kuang").fadeToggle(1);
+            //清空一下div
+            $(".chatBox-content-demo").empty();
+        });
+
+        // 发送信息
+        $("#chat-fasong").click(function () {
+            //获取发送的消息内容
+            var textContent = $(".div-textarea").html().replace(/[\n\r]/g, '<br>');
+
+            //发送消息的id
+            var toUser = $("#curcontactot").attr("cid");
+            //如果消息不为空
+            if (textContent != "") {
+
+                //使用websocket进行发送消息 ,首先进行持久话，然后回显到页面 回显用回调函数来表示
+
+                //0表示不是图片
+                var messageObj = {message: textContent, toUser: toUser, fromUser: userid};
+                var messageJson = JSON.stringify(messageObj);
+                //发送
+                if (socket == null) {
+
+                    socket = new WebSocket("ws://localhost:8080/wschat/" + userid);
+                }
+                socket.send(messageJson);
+
+
+                var timestr = getFormatDate();
+
+
+                var url = $("#imageUrl").val();
+                var tr = '<div class="clearfloat">' +
+                    '<div class="author-name"><small class="chat-date">' + timestr + '</small></div>' +
+                    '<div class="right">' +
+                    '<div class="chat-message">' + textContent + '</div>' +
+                    '<div class="chat-avatars"><img src=' + url + ' alt="头像"></div>' +
+                    '</div>' +
+                    '</div>';
+                $(".chatBox-content-demo").append(tr);
+                //发送后清空输入框
+                $(".div-textarea").html("");
+                //聊天框默认最底部
+                $(document).ready(function () {
+                    $("#chatBox-content-demo").scrollTop($("#chatBox-content-demo")[0].scrollHeight);
+                });
+            }
+
+            //判断一下是不是好友关系
+            $.ajax({
+                type: "GET",
+                url: "/chat/checkIsRelation",
+                data: {
+                    id1: userid,
+                    id2: toUser,
+                },
+                dataType: "JSON",
+                success: function (result) {
+
+                    if (result['code'] == 400) {
+                        //单向保存
+                        save(userid, toUser);
+                        //拉一下好友
+                        getContators();
+                    }
+                }
+            });
+
+        });
+
+        function save(id1, id2) {
+            $.ajax({
+                type: "GET",
+                url: "/chat/saveRelationship",
+                data: {
+                    id1: id1,
+                    id2: id2,
+                },
+                dataType: "JSON",
+                success: function (result) {
+                }
+            });
+        }
+
+        //      发送表情
+        $("#chat-biaoqing").click(function () {
+            $(".biaoqing-photo").toggle();
+        });
+        $(document).click(function () {
+            $(".biaoqing-photo").css("display", "none");
+        });
+        $("#chat-biaoqing").click(function (event) {
+            event.stopPropagation();//阻止事件
+        });
+
+        $(".emoji-picker-image").each(function () {
+            $(this).click(function () {
+                var bq = $(this).parent().html();
+                console.log(bq)
+                $(".chatBox-content-demo").append("<div class=\"clearfloat\">" +
+                    "<div class=\"author-name\"><small class=\"chat-date\">2017-12-02 14:26:58</small> </div> " +
+                    "<div class=\"right\"> <div class=\"chat-message\"> " + bq + " </div> " +
+                    "<div class=\"chat-avatars\"><img src=\"images/icon01.png\" alt=\"头像\" /></div> </div> </div>");
+                //发送后关闭表情框
+                $(".biaoqing-photo").toggle();
+                //聊天框默认最底部
+                $(document).ready(function () {
+                    $("#chatBox-content-demo").scrollTop($("#chatBox-content-demo")[0].scrollHeight);
+                });
+            })
+        });
+
+        //发送图片
+        function selectImg(pic) {
+
+            if (!pic.files || !pic.files[0]) {
+                return;
+            }
+            var reader = new FileReader();
+            reader.onload = function (evt) {
+                var images = evt.target.result;
+                $(".chatBox-content-demo").append("<div class=\"clearfloat\">" +
+                    "<div class=\"author-name\"><small class=\"chat-date\">2017-12-02 14:26:58</small> </div> " +
+                    "<div class=\"right\"> <div class=\"chat-message\"><img src=" + images + "></div> " +
+                    "<div class=\"chat-avatars\"><img src=\"images/icon01.png\" alt=\"头像\" /></div> </div> </div>");
+                //聊天框默认最底部
+                $(document).ready(function () {
+                    $("#chatBox-content-demo").scrollTop($("#chatBox-content-demo")[0].scrollHeight);
+                });
+            };
+            reader.readAsBinaryString(pic.files[0]);
+
+        }
+
+        //回显函数
+        function showdata(data) {
+
+            var p = data;
+            var id = p['id'];
+            var msgType = p['msgType'];
+            var createTime = p['createTime'];
+            var content = p['content'];
+            var fromUserId = p["fromUserId"];
+
+            var fromUserImage = p["fromUserImage"];
+            var toUserImage = p["toUserImage"];
+            var tr;
+            if (userid == fromUserId) {
+                tr = '<div class="clearfloat">' +
+                    '<div class="author-name"><small class="chat-date">' + createTime + '</small></div>' +
+                    '<div class="right">' +
+                    '<div class="chat-message">' + content + '</div>' +
+                    '<div class="chat-avatars"><img src=' + fromUserImage + ' alt="头像"></div>' +
+                    '</div>' +
+                    '</div>'
+            } else if (userid != fromUserId) {
+                tr = '<div class="clearfloat">' +
+                    '<div class="author-name"><small class="chat-date">' + createTime + '</small></div>' +
+                    '<div class="left">' +
+                    '<div class="chat-avatars"><img src=' + fromUserImage + ' alt="头像"></div>' +
+                    '<div class="chat-message">' + content + '</div>' +
+                    '</div>' +
+                    '</div>'
+            }
+
+            $(".chatBox-content-demo").append(tr);
+
+
+        }
+
+        //获取当前时间
+        function getFormatDate() {
+            var nowDate = new Date();
+            var year = nowDate.getFullYear();
+            var month = nowDate.getMonth() + 1 < 10 ? "0" + (nowDate.getMonth() + 1) : nowDate.getMonth() + 1;
+            var date = nowDate.getDate() < 10 ? "0" + nowDate.getDate() : nowDate.getDate();
+            var hour = nowDate.getHours() < 10 ? "0" + nowDate.getHours() : nowDate.getHours();
+            var minute = nowDate.getMinutes() < 10 ? "0" + nowDate.getMinutes() : nowDate.getMinutes();
+            return year + "-" + month + "-" + date + " " + hour + ":" + minute;
+        }
+    </script>
+</div>
+</body>
+
+
+</html>

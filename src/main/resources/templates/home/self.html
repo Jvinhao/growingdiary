@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>成长日记-个人中心</title>
+    <div th:replace="nav :: css"></div>
+
+    <style>
+        .file-preview-frame {
+            width: 240px;
+            height: 220px;
+        }
+    </style>
+
+    <!--<script rel="script" type="javascript" src="js/jquery-1.11.3.min.js"></script>-->
+</head>
+<body>
+<nav class="navbar navbar-default" th:replace="nav :: navs"></nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-2 col-md-3 col-sm-3" style="margin-top: 10px;" th:replace="nav:: tabar"></div>
+
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">修改头像</h4>
+                    </div>
+                    <div class="modal-body form-horizontal">
+                        <form action="/updateUserImg" method="post">
+                            <div class="form-group">
+                                <label for="uploadPicture" class="col-sm-3 control-label user-label">头像</label>
+                                <div class="col-sm-7">
+                                    <input type="text" hidden="hidden" name="userImg" id="userImg">
+                                    <input id="uploadPicture" name="file" type="file" multiple class="file-input">
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                <button type="submit" class="btn btn-primary">保存</button>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+
+                <!--<input type="file" class="form-control" id="cover" placeholder="封面" name="cover">-->
+            </div>
+        </div>
+        <div class="col-lg-8 col-md-8 col-sm-8" style="background: #f3f3f3">
+            <div class="col-lg-offset-3 col-lg-8">
+                <div class="col-lg-12 col-md-12 col-sm-12">
+                    <h3 class="col-lg-6 col-sm-5 col-md-5">完善你的个人资料</h3>
+                    <span class="col-lg-6 col-sm-7 col-md-7 font-center" style="margin-top: 24px;color: #f0ad4e">提示:若要修改头像,请先修改头像哦！</span>
+                    <div class="divider col-lg-12 col-md-12 col-sm-12" style="background: #0f0f0f"></div>
+                </div>
+
+                <br>
+                <form class="form-horizontal" style="margin-top: 10%;" action="/updateUser" method="post">
+                    <input type="hidden" name="id" th:value="${session.user.id}">
+                    <div class="form-group">
+                        <label for="username" class="col-sm-2 control-label user-label">用户名 </label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" id="username" th:value="${session.user.username}"
+                                   name="username">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label user-label">个性头像 </label>
+                        <div class="col-sm-6">
+                            <img class="img-rounded" style="width: 100px; height: 100px;" th:src="${session.user.userImg}"
+                                 name="userImg">
+                            <button type="button" class="btn btn-default" style="margin-bottom: 10px;margin-left:50px ;"
+                                    data-toggle="modal" data-target="#myModal">
+                                修改头像
+                            </button>
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label user-label">性别 </label>
+                        <div class="col-sm-6">
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" value="1" name="sex"
+                                           th:checked="${session.user.sex == 1}? true:false">男
+                                </label>
+                                <label>
+                                    <input type="radio" value="2" name="sex"
+                                           th:checked="${session.user.sex == 2}? true:false">女
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="school" class="col-sm-2 control-label user-label">学校 </label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" id="school" placeholder="目前就读大学"
+                                   name="school" th:value="${session.user.school}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="hobbies" class="col-sm-2 control-label user-label">爱好</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" id="hobbies" placeholder="爱好(用逗号隔开哦！)"
+                                   name="hobbies" th:value="${session.user.hobbies}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="bio" class="col-sm-2 control-label user-label">个性签名 </label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" id="bio" placeholder="个性签名"
+                                   name="bio" th:value="${session.user.bio}">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10 user-label">
+                            <button type="submit" class="btn btn-success">保存</button>
+                            <button type="reset" class="btn btn-default col-lg-offset-4">取消</button>
+                        </div>
+
+                    </div>
+                </form>
+
+
+            </div>
+
+
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-2">
+        </div>
+    </div>
+
+
+</div>
+
+<div th:replace="nav :: js">
+
+</div>
+
+<script th:inline="javascript">
+    $(function () {
+        $("input").attr("autocomplete", "off");
+        $(document).on('ready', function () {
+            var userImg = [[${session.user.userImg}]];
+            $("#uploadPicture").fileinput({
+                uploadUrl: "/doUploadImage",
+                previewFileType: "image",
+                autoReplace: true,
+                uploadAsync: true,
+                showCaption: false,
+                allowedFileExtensions: ["png", "jpg", "jpeg", "ico", "bmp", "gif"],
+                maxFileCount: 1,
+                maxFileSize: 3072,
+                showBrowse: true,
+                dropZoneTitle: '选择一个新的头像',
+                browseLabel: "选择头像",
+                uploadClass: "btn btn-info",
+                uploadLabel: "上传",
+                removeClass: "btn btn-danger",
+                removeLabel: "移除",
+                msgSizeTooLarge: '图片文件太大！',
+                msgFilesTooMany: "选择上传的文件数量为({n}) 超过允许的最大数值({m})！",
+                msgUploadEnd: '图片上传成功！',
+                msgUploadBegin: '初始化中...',
+                msgZoomModalHeading: '图片详情预览',
+                msgInvalidFileExtension: '非法文件扩展名 "{name}"！ 仅支持 "{extensions}" 的文件扩展名！'
+            }).on('fileerror', function (event, data, msg) {
+                alert('图片上传失败！' + msg);
+            }).on('fileuploaded', function (event, data) {
+                var imageUrl = data.response.data;
+                if (imageUrl != null) {
+                    $("#userImg").val(imageUrl);
+                }
+            }).on('fileclear', function (event) {
+                alert("图片被清除啦！");
+            });
+        });
+    })
+
+
+</script>
+</body>
+
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>成长日记-活动</title>
+    <div th:replace="nav :: css"></div>
+
+
+</head>
+<body>
+<nav class="navbar navbar-default" th:replace="nav :: navs">
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-2  col-sm-1"></div>
+        <div class="col-lg-6 col-md-12 col-sm-10 col-lg-offset-1 " style="border-right: 1px solid beige">
+            <!--<div class="swiper-main">
+                <div class="swiper-content">
+
+                </div>
+                <div class="swiper-point">
+
+                </div>
+                <div class="swiper-arrow arrow-left"><img src="/images/arrow-left.png" th:src="@{/images/arrow-left.png}"
+                                                          alt=""></div>
+                <div class="swiper-arrow arrow-right"><img src="/images/arrow-right.png" th:src="@{/images/arrow-right.png}"
+                                                           alt=""></div>
+            </div>-->
+
+
+            <div class="col-lg-12 col-sm-12 col-md-12">
+                <div class="col-lg-12 col-sm-12 col-md-12">
+                    <h3 style="float: left;margin-left: -16px">最新活动</h3>
+                </div>
+                <div style="clear:both;"></div>
+                <div class="col-lg-12 col-sm-12 col-md-12 divider" style="background: greenyellow"></div>
+                <div th:if="${activities.size == 0}" class="col-lg-12 col-sm-5 col-md-5" style="margin-right: 8%;;margin-top: 10px; margin-bottom:20px; background: #DCDCA4;border-radius: 4px;height: 100px">
+                    <div style="font-size: 20px;margin: 30px auto;color: green">还没有发布任何新的活动哦!</div>
+                </div>
+                <div th:each="activity : ${activities}" class="col-lg-12 col-sm-5 col-md-5" style="margin-right: 8%;;margin-top: 10px; margin-bottom:20px; background: #DCDCA4;border-radius: 4px">
+                    <h4  class="col-lg-11 col-sm-9 col-md-9">活动主题: <span th:text="${activity.actName}"></span></h4>
+                    <span class="label label-success lb-info" th:if="${activity.actState == 0}">进行中</span>
+                    <span class="label label-warning lb-info" th:if="${activity.actState == 1}">已结束</span>
+                    <span class="label label-danger lb-info" th:if="${activity.actState == -1}">未开始</span>
+                    <div class="col-lg-12 col-sm-12 col-md-12 divider" style="background: greenyellow"></div>
+                    <div class="col-lg-5 col-sm-10 col-md-10">
+                        <img th:src="${activity.actCover}" src="/images/register.jpg" alt="" style="width: 100%;height: 190px;margin: 20px 10%;border-radius: 10px;border: 3px dotted yellow;">
+                    </div>
+                    <div class="col-lg-6 col-sm-12 col-md-12" style="margin-left: 6%;">
+                        <h4>------------活动描述-----------</h4>
+                        <p th:text="${activity.actDescription}">成长的路总是很长很长，记录下这一段段的点点滴滴，分享你的成长轨迹，让更多的人知道你的故事！</p>
+                        <h4>------------活动热度-----------</h4>
+                        <div class="col-lg-6 col-md-6 col-sm-6" aria-hidden="true" title="热度">
+                            <img src="/images/hot.png" width="20px"/>&nbsp;热度:<span th:text="${activity.actHot}">4792</span>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6" aria-hidden="true" title="人数">
+                            <img src="/images/people.png" width="20px" height="26px"/>&nbsp;人数:<span th:text="${activity.actPeople}">32</span>
+                        </div>
+                        <a th:href="@{'/activity/' + ${activity.id}}" type="button" class="btn btn-success" style="margin: 15px; float: right">查看活动详情</a>
+                    </div>
+                </div>
+
+            </div>
+
+
+        </div>
+        <!--<div class="col-lg-4 col-md-4 col-sm-4">
+            <div class="col-lg-12 col-md-12 col-sm-12 time-block">
+                <div class="time font-center">
+                    <span th:text="'今日: ' + ${#dates.format(#dates.createNow(),'yyyy年MM月dd日')}">2019年1月15日</span>
+
+                </div>
+                <div class="col-sm-12 col-lg-12 col-md-12 col-lg-offset-1" th:if="${session.user != null}"
+                     style="margin-top: 10px;">
+                    <span th:text="'当前用户: ' + ${session.user.username}">Jvinh</span><br>
+                    <span th:text="'我的签名: 无'"
+                          th:if="${session.user.bio == null || session.user.bio == ''}">加油,你是最棒的!</span>
+                    <span th:text="'我的签名: ' + ${session.user.bio}"
+                          th:if="${session.user.bio != null && session.user.bio != ''}">加油,你是最棒的!</span>
+                </div>
+
+            </div>
+
+            <div class="col-lg-12 col-md-12 col-sm-12 maybeKnow">
+                <div class="panel panel-default">
+                    <div class="panel-heading">如何发布一篇日记？</div>
+                    <div class="panel-body">
+                        <div class="panel-diary">1. 登录之后，进入到Home。</div>
+                        <br>
+                        <div class="panel-diary">2. 点击创建一个日记本。</div>
+                        <br>
+                        <div class="panel-diary">3. 进入到写日记页面。</div>
+                        <br>
+                        <div style="color: red;" class="panel-diary">4. 选择一个所属的日记本。</div>
+                        <br>
+                        <div class="panel-diary">5. 开始写日记，完成之和点击保存，发布日记。</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>-->
+
+    </div>
+</div>
+<div th:replace="nav:: beian">
+
+</div>
+
+<div th:replace="nav :: js"></div>
+<script th:inline="javascript">
+
+    $(function () {
+        /**
+         * 参数：
+         * 1.最外层父元素  必填项
+         * 2.图片地址数组  必填项
+         *   支持数组内为字符串，识别作为图片地址
+         *   [string,string,string]
+         *   支持数组内为对象，对象的每个key会被作为属性添加到对应的banner标签中，用prop方法获取（其中图片地址字段必须为imgUrl）：
+         *   [object,object,object] eq：[{imgUrl:'./images/1.jpg',count:'0','name':'第一个'}]
+         * 3.配置信息      非必填
+         * 4.当前元素点击回调，回调中返回点击元素jquery实例  非必填
+         * 5.轮播图创建完毕回调,回调中返回轮播对象数组,可用于后续逻辑处理  非必填
+         */
+        swiper.init($(".swiper-main"),
+            [
+                {imgUrl: '/images/comment.png', id: '1'},
+                "/images/comment.png",
+                "/images/comment.png"
+            ],
+            {
+                // ismobile: false,//可选，不填则自动判断客户端，默认false - true / false(PC端/移动端)
+                arrowtype: 'move',	//可选，默认一直显示 - 'move（移动端不支持）' / 'none'	(鼠标移上显示 / 不显示 )
+                autoplay: true,	//可选，默认true - true / false (开启轮播/关闭轮播)
+                cantouch: true,//可选，默认true - true / false (开启拖拽切换/关闭拖切换)
+                showpoint: true,//可选，默认true - true / false (显示轮播点/关闭轮播点)
+                time: 5000	//可选，默认3000
+            }, function (item) {
+                /*console.log("click success", item);*/
+            }, function (list) {
+                /*console.log("create success", list);*/
+            }
+        );
+        addActivityInfo(1)
+
+
+    })
+
+
+</script>
+
+
+</body>
+
+</html>

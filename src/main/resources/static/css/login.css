@@ -1,0 +1,160 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    background: url("../images/leaves.png");
+}
+
+.dowebok {
+    width: 358px;
+    height: 514px;
+    border: 1px solid #ffffff;
+    margin: 20px auto;
+    border-radius: 20px;
+    position: absolute;
+    left: 38%;
+    top: 10%;
+    overflow: hidden;
+    background-color: #5cb85c;
+    opacity: 0.8;
+}
+
+@media screen and (max-width: 420px) and (min-width: 300px) {
+    .dowebok {
+        background-color:orange;
+    }
+}
+
+.logo {
+    width: 108px;
+    height: 108px;
+    background: url("../images/favicon.ico") no-repeat;
+    margin: 20px auto;
+    position: relative;
+    background-size: 108px;
+    border-radius: 30%;
+}
+
+.item {
+    width: 200px;
+    height: 50px;
+    /*border: 1px solid #ffffff;*/
+    /*margin: 0 auto;*/
+    margin-left: 10%;
+    /*border-radius: 30px;*/
+    padding-bottom: 20px;
+    /*position: relative;*/
+
+}
+
+.item input {
+    width: 200px;
+    height: 48px;
+    padding-left: 55px;
+    border: 1px solid #ffffff;
+    border-radius: 30px;
+    color: #ffffff;
+    background-color: transparent;
+    position: relative;
+    margin-bottom: 30px;
+    left: 6%;
+    font-size: 16px;
+    outline: none;
+}
+
+
+input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {
+    color: #ffffff;
+}
+
+#username {
+    background: url("../images/username.png") no-repeat 15px 10px;
+    background-size: 28px 28px;
+}
+
+#password {
+    background: url("../images/password.png") no-repeat 20px 11px;
+}
+
+.item button {
+    width: 260px;
+    height: 50px;
+    background-color: #fff;
+    position: relative;
+    left: 6%;
+    border-radius: 30px;
+    color: #1f6f4a;
+    font-size: 15px;
+    margin-bottom: 30px;
+    outline: none;
+    cursor: pointer;
+}
+
+.item button:hover {
+    opacity: 0.5;
+}
+
+.reg {
+    /*position: absolute;*/
+    width: 275px;
+    overflow: hidden;
+}
+
+.reg a {
+    color: white;
+    font-size: 14px;
+    text-decoration: none;
+    margin-bottom: 30px;
+    /*position: relative;*/
+    /*bottom: 30px;*/
+}
+
+
+a:hover {
+    text-decoration: underline;
+}
+
+.reg .bar {
+    float: left;
+}
+
+.reg .forget {
+    float: right;
+}
+
+.title {
+    text-align: center;
+    color: lawngreen;
+    margin-bottom: 20px;
+
+}
+
+.errorMsg {
+    color: red;
+    display: block;
+    font-size: 14px;
+    width: 200px;
+    margin-left: 10%;
+    margin-top: -15px;
+    margin-bottom: 20px;
+}
+
+.other-login {
+    margin-left: 10px;
+    line-height: 39px;
+    width: 255px;
+    color: white;
+    font-size: 14px;
+    border-top: 1px solid whitesmoke;
+    border-bottom: 1px solid;
+    margin-bottom: 10px;
+}
+.QQ-login {
+    width: 10%;
+    position: relative;
+    top: 7px;
+    left: 4px;
+}
+

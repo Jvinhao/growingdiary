@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>成长日记-我写过的日记</title>
+    <div th:replace="nav::css">
+
+    </div>
+    <link href="https://cdn.bootcss.com/bootstrap-switch/4.0.0-alpha.1/css/bootstrap-switch.css" rel="stylesheet">
+    <style>
+
+    </style>
+    <!--<script rel="script" type="javascript" src="js/jquery-1.11.3.min.js"></script>-->
+</head>
+<body>
+<nav class="navbar navbar-default" th:replace="nav::navs">
+    <div class="container-fluid" style="display: flex; flex-direction: row;justify-content: space-around;">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">成长日记</a>
+            <ul class="nav navbar-nav">
+                <li><a href="../index.html">首页<span class="sr-only">(current)</span></a></li>
+                <li><a href="#">大学<span class="sr-only">(current)</span></a></li>
+                <li><a href="#">音乐<span class="sr-only">(current)</span></a></li>
+                <li class="active"><a href="home.html">Home<span class="sr-only">(current)</span></a></li>
+            </ul>
+        </div>
+
+        <div class="collapse navbar-collapse">
+            <form class="navbar-form navbar-left">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="搜索人 ...">
+                </div>
+                <button type="submit" class="btn btn-default">搜索</button>
+            </form>
+        </div>
+
+        <div class="column">
+            <div class="media">
+                <div class="media-left">
+                    <a href="/home">
+                        <img class="media-object img-rounded user-img" src="img/Jvinh.jpg" alt="...">
+                    </a>
+                </div>
+                <div class="media-left">
+                    <a class="glyphicon glyphicon-off user-icon" aria-hidden="true"></a>
+                </div>
+                <div class="media-left">
+                    <span class="glyphicon glyphicon-cog user-icon" aria-hidden="true"></span>
+                </div>
+
+            </div>
+        </div>
+
+
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-2 col-md-3 col-sm-3" style="margin-top: 10px;" th:replace="nav:: tabar"></div>
+
+        <div class="col-lg-6 col-md-6 col-sm-7 col-lg-offset-1">
+            <div class="panel panel-default" th:each="diary : ${diaryList}">
+                <!-- Default panel contents -->
+                <div class="panel-heading" style="height: 50px">
+                    <h4 class="col-lg-6 col-sm-6 col-md-6" th:text="${diary.diaryTitle}">北京旅游第一天</h4>
+                    <span style="float: right; text-align: right;margin-top: 10px" class="col-lg-4 col-sm-5 col-md-5">发布时间：<span
+                            th:text="${#dates.format(diary.diaryDate,'yyyy-MM-dd')}"></span></span>
+                </div>
+                <div class="panel-body">
+                    <p th:utext="${diary.diaryContent}"></p>
+                </div>
+                <div class="panel-footer">
+                    <div class="panel-information">
+                        <span>获赞数量: <span th:text="${diary.likeCount}"></span></span>
+                        <a role="button" data-toggle="collapse" th:href="'#collapseComment' + ${diary.id}"
+                           aria-expanded="false"
+                           aria-controls="collapseExample" th:onclick="showComment([[${diary.id}]])">
+                            评论次数: <span th:text="${diary.commentCount}"></span>
+                        </a>
+                        <span>所属日记本: [[${diary.diaryBook.title}]]</span>
+                        <input type="checkbox" name="isShow" th:id="${diary.id}" th:value="${diary.isShow}" hidden>
+                    </div>
+                    <div class="collapse" th:id="'collapseComment' + ${diary.id}" data-show="0">
+                        <div class="well" th:id="'comment' + ${diary.id}"
+                             style="padding: 10px!important;margin-bottom: 12px!important;">
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-3 col-sm-3">
+            <div class="panel panel-info">
+                <div class="panel-heading">收到的评论数&nbsp;[&nbsp;<span th:text="${commentList.size()}">4</span>&nbsp;]</div>
+                <div class="panel-body pre-scrollable" style="font-size: 14px;height: 320px">
+                        <a role="button" data-toggle="collapse" th:href="'#collapseComment' + ${comment.diary.id}"
+                           aria-expanded="false" aria-controls="collapseExample" th:onclick="updateCommentRead([[${comment.diary.id}]],[[${comment.id}]])" class="list-group-item" th:each="comment : ${commentList}">
+                            <span th:text="${comment.user.username}"></span> 评论了日记 <span th:text="${comment.diary.diaryTitle}"></span>
+                            <input type="hidden" th:value="${comment.isRead}" th:id="'isRead' + ${comment.id}">
+                            <span class="label label-danger" style="float: right;" th:id=" 'info-' + ${comment.id}" th:if="${comment.isRead == 0}">new</span>
+                        </a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div th:replace="nav::js">
+
+    </div>
+    <script th:inline="javascript">
+        $(function () {
+            $(".span-delete").popConfirm();
+
+        });
+
+    </script>
+    <script src="https://cdn.bootcss.com/bootstrap-switch/4.0.0-alpha.1/js/bootstrap-switch.min.js"
+            rel="script"></script>
+    <script th:inline="javascript">
+        var diaryList = [[${diaryList}]];
+        for (var i in diaryList) {
+            var diary_id = diaryList[i].id;
+            $("#" + diary_id).bootstrapSwitch({
+                onText: "公开的",
+                offText: "私密的",
+                onColor: "success",
+                offColor: "warning",
+                size: "Large",
+                state: diaryList[i].isShow === 1 ? true : false,
+                onSwitchChange: function (event, state) {
+                    var diaryId = event.currentTarget.id;
+                    if (state === true) {
+                        changeState(1, diaryId);
+                    } else {
+                        changeState(0, diaryId);
+                    }
+                }
+            });
+        }
+    </script>
+</div>
+</body>
+
+</html>

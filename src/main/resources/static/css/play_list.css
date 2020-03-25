@@ -1,0 +1,115 @@
+.swiper-main {
+    width: 100%;
+    height: 300px;
+    background: #ffffff;
+    margin: 0 auto;
+    position: relative;
+    overflow: hidden;
+    border-radius: 4px;
+}
+
+.swiper-content {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    border-radius: 4px;
+    border: 1px solid #f0f0f0;
+    margin-right: 2px;
+}
+
+
+.swiper-item {
+    width: 503px;
+    height: 298px;
+    position: absolute;
+
+    left: 101%;
+    top: 0;
+}
+
+.swiper-item img {
+    width: 80%;
+    height: 300px;
+    display: block;
+    border-radius: 4px;
+    margin: 0 1px;
+}
+
+.swiper-point {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.swiper-circle {
+    float: left;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background-color: #ccc;
+    margin: 0 5px;
+    cursor: pointer;
+}
+
+.current-point {
+    background-color: #5cb85c;
+}
+
+.swiper-arrow {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #000;
+    cursor: pointer;
+    border: none;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.swiper-arrow img {
+    display: block;
+    width: 20px;
+    height: 20px;
+    margin: 10px auto;
+}
+
+.arrow-left {
+    left: 10px;
+}
+
+.arrow-right {
+    right: 10px;
+}
+
+.activity-info {
+    position: absolute;
+    top: 10%;
+    left: 85%;
+    width: 52%;
+    height: 80%;
+    background: #f0f0f0;
+    opacity: 0.8;
+    border-radius: 5%;
+    padding-left: 6px;
+    vertical-align: middle;
+    display: table-cell;
+    font-size: 14px;
+    font-weight: 600;
+    padding-top: 5%;
+
+}
+
+.activity-div {
+    margin-left: 6px;
+    margin-top: 4px;
+    margin-bottom: 5px;
+}
+.activity-span {
+    margin-left: 6px;
+    margin-top: 4px;
+    margin-bottom: 5px;
+}

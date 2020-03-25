@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>成长日记-找回密码</title>
+    <style>
+        .error {
+            color: red;
+            margin-left: 28px;
+            margin-top: -10px;
+        }
+    </style>
+
+    <div th:replace="nav :: css"></div>
+</head>
+<body class="register-bg">
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-3 col-sm-5 col-md-5"
+             style="background: #ffffff;opacity: 0.6;margin-top: 5%;margin-left: 37%;border-radius: 5px;">
+            <form action="/forget/updatePassword" method="post" id="register-form">
+                <div class="form-group col-lg-12 form-change">
+                    <h3 style="margin-left: 20%">找回你的账号密码</h3>
+                </div>
+                <div class="form-group form-change">
+                    <input type="text" class="form-control form-css" id="username" placeholder="昵称" name="username"
+                           autocomplete="off" onKeypress="javascript:if(event.keyCode == 32)event.returnValue = false;">
+                </div>
+                <div class="form-group form-change">
+                    <input type="password" class="form-control form-css" id="password" placeholder="新的密码"
+                           name="password"
+                           required="required" oninvalid="setCustomValidity('请输入新的密码')"
+                           data-toggle="collapse" onclick="showInfo()" aria-expanded="false"
+                           aria-controls="inputInfo"
+                           onKeypress="javascript:if(event.keyCode == 32)event.returnValue = false;">
+                    <div class="collapse form-group sure-pass" id="inputInfo">
+                        <div class="well well-span">
+                            <span>1.请输入6-10位数的密码</span><br>
+                            <span>2.确保两次密码一致</span>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="form-group form-change">
+                    <input type="password" class="form-control form-css" id="confirmPassword" placeholder="确认密码"
+                           name="confirmPassword" onclick="removeInfo()"
+                           onKeypress="javascript:if(event.keyCode == 32)event.returnValue = false;">
+                </div>
+
+                <div class="form-group form-change">
+                    <input type="email" class="form-control form-css" id="email" placeholder="邮箱" name="email"
+                           required="required" oninput="setCustomValidity('')" oninvalid="setCustomValidity('请输入邮箱')"
+                           onKeypress="javascript:if(event.keyCode == 32)event.returnValue = false;">
+                </div>
+
+                <div class="form-group form-change" style="position: relative">
+                    <input type="text" class="form-control" style="width: 195px;margin: 20px 26px" id="validateCode"
+                           placeholder="验证码"
+                           name="validateCode" onclick="removeInfo()"
+                           onKeypress="javascript:if(event.keyCode == 32)event.returnValue = false;">
+                    <button onclick="getValidateCode()" type="button" class="btn btn-success" style="width: 96px;position: absolute; top: 0;right: 26px;">获取验证码
+                    </button>
+                    <span th:text="${errorMsg}" style="color: red;margin-left: 8%;"></span>
+                </div>
+
+
+                <div class="form-group form-change">
+                    <button type="submit" class="form-control btn-default form-css">修改密码</button>
+                </div>
+
+
+            </form>
+        </div>
+
+    </div>
+</div>
+
+<div th:replace="nav :: js"></div>
+
+<script>
+    $().ready(function () {
+        $("#register-form").validate({
+            rules: {
+                password: {
+                    required: true,
+                    minlength: 6
+                },
+                confirmPassword: {
+                    required: true,
+                    minlength: 5,
+                    equalTo: "#password"
+                },
+                email: {
+                    required: true,
+                    email: true
+                }
+            },
+            messages: {
+                password: {
+                    required: "请输入密码",
+                    minlength: "密码长度不能小于 6 个字母"
+                },
+                confirm_password: {
+                    required: "请输入新的密码",
+                    minlength: "密码长度不能小于 6 个字母",
+                    equalTo: "两次密码输入不一致"
+                }
+            }
+
+        })
+    });
+
+    function removeInfo() {
+        $("#inputInfo").removeClass("in");
+    }
+
+    function showInfo() {
+        $("#inputInfo").addClass("in");
+    }
+
+    function getValidateCode() {
+        var email = $("#email").val();
+        if(email === "" || email === null) {
+            alert("请先输入邮箱");
+            return;
+        }
+        $.ajax({
+            type:"post",
+            async: true,
+            data: {
+                email: email
+            },
+            url:"/forget/getValidateCode"
+        })
+    }
+
+</script>
+</body>
+</html>
