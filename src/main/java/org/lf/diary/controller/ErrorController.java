@@ -29,4 +29,9 @@ public class ErrorController {
         return "error/error_500";
     }
 
+    @GetMapping(value = "/disableIp")
+    public String disableIp() {
+        return "error/disableIp";
+    }
+
 }

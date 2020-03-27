@@ -4,6 +4,7 @@ import org.lf.diary.model.DiaryBook;
 import org.lf.diary.model.DiaryBookVO;
 import org.lf.diary.model.User;
 import org.lf.diary.service.DiaryBookService;
+import org.lf.diary.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,6 +24,9 @@ public class HomeController {
 
     @Autowired
     private DiaryBookService diaryBookService;
+
+    @Autowired
+    private UserService userService;
 
     @RequestMapping("home")
     public String home(Model model, HttpServletRequest request) {
@@ -51,8 +55,7 @@ public class HomeController {
     }
 
     @RequestMapping("/home/self")
-    public String self(Model model) {
-
+    public String self(Model model,HttpServletRequest request) {
         model.addAttribute("title","home");
         model.addAttribute("action","5");
         return "home/self";

@@ -25,9 +25,9 @@ public class MyConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(myInterceptor).addPathPatterns("/**")
                 .excludePathPatterns("/css/**","/fonts/**","/images/**",
-                        "/js/**","/audio/**","/img/**","/translations/**","/photos/**");
+                        "/js/**","/audio/**","/img/**","/translations/**","/photos/**","/error/disableIp");
         registry.addInterceptor(chatInterceptor).addPathPatterns("/**")
                 .excludePathPatterns("/css/**","/fonts/**","/images/**",
-                        "/js/**","/audio/**","/img/**","/translations/**","/photos/**");
+                        "/js/**","/audio/**","/img/**","/translations/**","/photos/**","/error/disableIp");
     }
 }

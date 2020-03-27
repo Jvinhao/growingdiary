@@ -41,4 +41,10 @@ public interface CommentRepository extends JpaRepository<Comment,Long>, JpaSpeci
     @Query(value = "update comment set is_read = 1 where id = ?1",nativeQuery = true)
     @Modifying
     void updateCommentRead(Long commentId);
+
+    /**
+     * 通过日记id删除所有的评论
+     * @param id
+     */
+    void deleteAllByDiaryId(Long id);
 }

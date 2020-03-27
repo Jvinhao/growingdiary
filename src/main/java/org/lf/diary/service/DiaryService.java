@@ -45,5 +45,16 @@ public interface DiaryService {
      */
     Long countDiary();
 
+    /**
+     * 修改日记状态
+     * @param isShow
+     * @param id
+     */
     void changeState(Integer isShow, Long id);
+
+    /**
+     * 删日记
+     * @param id
+     */
+    void delDiary(Long id);
 }

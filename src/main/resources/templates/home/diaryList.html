@@ -60,12 +60,18 @@
         <div class="col-lg-2 col-md-3 col-sm-3" style="margin-top: 10px;" th:replace="nav:: tabar"></div>
 
         <div class="col-lg-6 col-md-6 col-sm-7 col-lg-offset-1">
-            <div class="panel panel-default" th:each="diary : ${diaryList}">
+            <div class="panel panel-default" th:each="diary : ${diaryList}" th:id="${'diary'+diary.id}">
                 <!-- Default panel contents -->
                 <div class="panel-heading" style="height: 50px">
-                    <h4 class="col-lg-6 col-sm-6 col-md-6" th:text="${diary.diaryTitle}">北京旅游第一天</h4>
+                    <h4 class="col-lg-6 col-sm-7 col-md-7" >
+                        <span style="float: left" th:text="${diary.diaryTitle}"></span>
+                        <span th:onclick="delDiary([[${diary.id}]])" aria-hidden="true" title="删除日记本"
+                           style="float: left;color: red;margin-left: 5px;"   class="span-delete popconfirm" data-confirm-title="删除"
+                              data-confirm-content="确定要删除这个日记吗?">[×]</span>
+                    </h4>
+
                     <span style="float: right; text-align: right;margin-top: 10px" class="col-lg-4 col-sm-5 col-md-5">发布时间：<span
-                            th:text="${#dates.format(diary.diaryDate,'yyyy-MM-dd')}"></span></span>
+                      style="font-size: 14px"      th:text="${#dates.format(diary.diaryDate,'yyyy-MM-dd')}"></span></span>
                 </div>
                 <div class="panel-body">
                     <p th:utext="${diary.diaryContent}"></p>
@@ -95,8 +101,8 @@
             <div class="panel panel-info">
                 <div class="panel-heading">收到的评论数&nbsp;[&nbsp;<span th:text="${commentList.size()}">4</span>&nbsp;]</div>
                 <div class="panel-body pre-scrollable" style="font-size: 14px;height: 320px">
-                        <a role="button" data-toggle="collapse" th:href="'#collapseComment' + ${comment.diary.id}"
-                           aria-expanded="false" aria-controls="collapseExample" th:onclick="updateCommentRead([[${comment.diary.id}]],[[${comment.id}]])" class="list-group-item" th:each="comment : ${commentList}">
+                        <a role="button"  th:href="'#diary' + ${comment.diary.id}"
+                            th:onclick="updateCommentRead([[${comment.diary.id}]],[[${comment.id}]])" class="list-group-item" th:each="comment : ${commentList}">
                             <span th:text="${comment.user.username}"></span> 评论了日记 <span th:text="${comment.diary.diaryTitle}"></span>
                             <input type="hidden" th:value="${comment.isRead}" th:id="'isRead' + ${comment.id}">
                             <span class="label label-danger" style="float: right;" th:id=" 'info-' + ${comment.id}" th:if="${comment.isRead == 0}">new</span>

@@ -34,6 +34,34 @@ function delDiaryBook(id) {
 
 }
 
+//删除日记
+function delDiary(id) {
+    $.ajax({
+        //请求方式
+        type: "POST",
+        //请求地址
+        url: "/delDiary",
+        async: false,   //请求是否异步，默认为异步，这也是ajax重要特性
+        //数据，json字符串
+        data: {
+            id: id
+        },
+        success: function (data) {
+            console.log(data);
+            if (data.code === 200) {
+                window.location.reload()  //刷新页面
+            }
+
+        },
+        //请求失败，包含具体的错误信息
+        error: function (e) {
+            console.log(e.status);
+            console.log(e.responseText);
+        }
+    });
+
+}
+
 //创建日记本
 function createDiary() {
     $("#action").text("创建");

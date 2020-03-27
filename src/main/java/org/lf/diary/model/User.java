@@ -33,6 +33,9 @@ public class User {
 
     private String token;
 
+    @Column(name = "register_ip")
+    private String registerIp;
+
     @Column(name = "create_time")
     private Date createTime;
     @Column(name = "modify_time")

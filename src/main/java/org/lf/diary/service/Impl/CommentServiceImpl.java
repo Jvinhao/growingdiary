@@ -79,4 +79,10 @@ public class CommentServiceImpl implements CommentService {
     public void updateCommentRead(Integer isRead, Long commentId) {
         commentRepository.updateCommentRead(commentId);
     }
+
+    @Override
+    @Transactional(rollbackOn = Exception.class)
+    public void delAllComment(Long id) {
+        commentRepository.deleteAllByDiaryId(id);
+    }
 }

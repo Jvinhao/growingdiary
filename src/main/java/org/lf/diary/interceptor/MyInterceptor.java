@@ -5,7 +5,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.lf.diary.model.User;
 import org.lf.diary.repository.UserRepository;
 import org.lf.diary.service.CommentService;
+import org.lf.diary.service.IpRecordService;
 import org.lf.diary.utils.RedisUtil;
+import org.lf.diary.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -33,40 +35,55 @@ public class MyInterceptor implements HandlerInterceptor {
     @Autowired
     private RedisUtil redisUtil;
 
+    @Autowired
+    private IpRecordService ipRecordService;
+
+    @Autowired
+    private SecurityUtils securityUtils;
+
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null && cookies.length != 0) {
-            Jedis jedis = redisUtil.getJedis();
-            for (Cookie cookie : cookies) {
-                if ("token".equals(cookie.getName())) {
-                    String token = cookie.getValue();
-                    String userStr = jedis.get(token);
-                    User user;
-                    if (StringUtils.isNotBlank(userStr)) {
-                        user = JSON.parseObject(userStr, User.class);
-                    } else {
-                        user = userRepository.findByToken(token);
-                    }
-                    if (user != null) {
-                        Long unReadNum;
-                        request.getSession().setAttribute("user", user);
-                        //获取用户当前未读的消息条数
-                        String unRead = jedis.get("unRead" + user.getId());
-                        if (StringUtils.isNotBlank(unRead)) {
-                            unReadNum = JSON.parseObject(unRead, Long.class);
+        String ipAddr = securityUtils.getIpAddr(request);
+        Boolean b = ipRecordService.findDisableIp(ipAddr);
+        if(b) {
+            response.sendRedirect("/error/disableIp");
+            return false;
+        }else {
+            Cookie[] cookies = request.getCookies();
+            if (cookies != null && cookies.length != 0) {
+                Jedis jedis = redisUtil.getJedis();
+                for (Cookie cookie : cookies) {
+                    if ("token".equals(cookie.getName())) {
+                        String token = cookie.getValue();
+                        String userStr = jedis.get(token);
+                        User user;
+                        if (StringUtils.isNotBlank(userStr)) {
+                            user = JSON.parseObject(userStr, User.class);
                         } else {
-                            unReadNum = commentService.unRead(user.getId());
-                            jedis.set("unRead" + user.getId(), unReadNum.toString());
-                            jedis.expire("unRead" + user.getId(), 30);
-
+                            user = userRepository.findByToken(token);
                         }
-                        request.getSession().setAttribute("unRead", unReadNum);
+                        if (user != null) {
+                            Long unReadNum;
+                            request.getSession().setAttribute("user", user);
+                            //获取用户当前未读的消息条数
+                            String unRead = jedis.get("unRead" + user.getId());
+                            if (StringUtils.isNotBlank(unRead)) {
+                                unReadNum = JSON.parseObject(unRead, Long.class);
+                            } else {
+                                unReadNum = commentService.unRead(user.getId());
+                                jedis.set("unRead" + user.getId(), unReadNum.toString());
+                                jedis.expire("unRead" + user.getId(), 30);
+
+                            }
+                            request.getSession().setAttribute("unRead", unReadNum);
+                        }
                     }
                 }
+                redisUtil.close(jedis);
             }
-            redisUtil.close(jedis);
+            return true;
         }
-        return true;
+
     }
 }

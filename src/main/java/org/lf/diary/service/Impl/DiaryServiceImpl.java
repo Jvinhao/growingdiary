@@ -99,5 +99,10 @@ public class DiaryServiceImpl implements DiaryService {
         diaryRepository.updateIsShow(isShow,id);
     }
 
+    @Override
+    public void delDiary(Long id) {
+        diaryRepository.deleteById(id);
+    }
+
 
 }

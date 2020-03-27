@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void saveUser(User user) {
+    public User saveUser(User user) {
         User userDb = userRepository.findById(user.getId()).orElseThrow(() -> new ServiceException("id不存在"));
         user.setUserImg(userDb.getUserImg());
         user.setPassword(userDb.getPassword());
@@ -64,7 +64,7 @@ public class UserServiceImpl implements UserService {
         user.setToken(userDb.getToken());
         user.setCreateTime(userDb.getCreateTime());
         user.setModifyTime(new Date());
-        userRepository.save(user);
+        return userRepository.save(user);
     }
 
     @Override
@@ -137,6 +137,7 @@ public class UserServiceImpl implements UserService {
     }
 
     //返回用户的安全信息
+    @Override
     public User findById(Long id){
         User user = userRepository.findById(id).orElseThrow(() -> new ServiceException("id不存在"));
         User u = new User();

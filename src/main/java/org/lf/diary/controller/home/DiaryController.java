@@ -56,6 +56,14 @@ public class DiaryController {
         }
     }
 
+    @RequestMapping(value = "/delDiary",method = RequestMethod.POST)
+    @ResponseBody
+    public Result delDiary(Long id) {
+        commentService.delAllComment(id);
+        diaryService.delDiary(id);
+        return ResultGenerator.genSuccessResult();
+    }
+
     @RequestMapping(value = "/updatePraise",method = RequestMethod.POST)
     @ResponseBody
     public Result updatePraise(Integer likeCount,Long id) {

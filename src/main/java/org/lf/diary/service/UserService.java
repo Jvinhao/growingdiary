@@ -23,8 +23,9 @@ public interface UserService {
     /**
      * 保存用户
      * @param user
+     * @return User
      */
-    void saveUser(User user);
+    User saveUser(User user);
 
     /**
      * 统计用户

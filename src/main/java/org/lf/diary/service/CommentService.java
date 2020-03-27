@@ -46,4 +46,10 @@ public interface CommentService {
      * @param commentId
      */
     void updateCommentRead(Integer isRead, Long commentId);
+
+    /**
+     * 删除所有的评论
+     * @param id
+     */
+    void delAllComment(Long id);
 }
