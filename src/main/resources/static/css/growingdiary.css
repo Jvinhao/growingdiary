@@ -70,7 +70,6 @@ body {
     background: #eeeeee;
     cursor: pointer;
 
-
 }
 
 .ck-editor__editable {
@@ -99,7 +98,7 @@ body {
     margin-left: 25px;
     height: 79px;
     font-weight: bold;
-    color: springgreen;
+    color: black;
 }
 
 .form-register {

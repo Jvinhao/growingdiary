@@ -293,14 +293,14 @@ function showActivity(state) {
                     $("#changeAct").data("act", state);
                     $("#activities").html("");
                     data = data.data;
-                    if(data.length === 0) {
+                    if (data.length === 0) {
                         $("#activities").append("<li class='list-group-item list-group-item-success'>还没有参加任何活动哦</li>");
                     }
 
 
                     for (var i = 0; i < data.length; i++) {
                         var ali = "<li class='list-group-item list-group-item-success'>" +
-                            "<span>活动主题:</span><a href='/activity/" + data[i].id +"'>" + data[i].actName + "</a>" +
+                            "<span>活动主题:</span><a href='/activity/" + data[i].id + "'>" + data[i].actName + "</a>" +
                             "<div style='float: right'>" + "<span class='label " + nowLev + "'style='margin-right: 4px;'>" + now + "</span>" +
                             "<span style='font-size: 12px;position:relative; top: 5px'>开始时间:<span>" + format(data[i].actStart) + "</span></span></div></li>"
                         $("#activities").append(ali);
@@ -310,5 +310,11 @@ function showActivity(state) {
             }
         })
     }
+}
+
+//获取数字验证图片
+function getVerifyImg(id) {
+    $('#' + id).attr("src", "/verify/codeImg?rand=" + Math.random());
+    // $('#' + id).attr("src", "/verify/codeImg");
 }
 

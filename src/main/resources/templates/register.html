@@ -26,7 +26,7 @@
                 </div>
                 <div class="form-group form-change">
                     <input type="text" class="form-control form-css" id="username" placeholder="昵称" name="username"
-                        autocomplete="off"   onKeypress="javascript:if(event.keyCode == 32)event.returnValue = false;">
+                           autocomplete="off" onKeypress="javascript:if(event.keyCode == 32)event.returnValue = false;">
                 </div>
                 <div class="form-group form-change">
                     <input type="password" class="form-control form-css" id="password" placeholder="密码" name="password"
@@ -38,11 +38,9 @@
                         <div class="well well-span">
                             <span>1.请输入6-10位数的密码</span><br>
                             <span>2.确保两次密码一致</span>
-
                         </div>
                     </div>
                 </div>
-
 
                 <div class="form-group form-change">
                     <input type="password" class="form-control form-css" id="confirmPassword" placeholder="确认密码"
@@ -57,6 +55,13 @@
                     <span id="errorMsg" style="color: red;margin-left: 10%;"></span>
                 </div>
 
+                <div class="form-group form-change">
+                    <img style="margin-left:27px;height: 32px;width: 90px" id="registerVerifyImg"
+                         onclick="getVerifyImg('registerVerifyImg')">
+                    <input type="text" id="verifyCode" placeholder="验证码" name="verifyCode" style="width: 100px;height: 25px"
+                           required="required" oninput="setCustomValidity('')" oninvalid="setCustomValidity('请输入验证码')"
+                           onKeypress="javascript:if(event.keyCode == 32)event.returnValue = false;" >
+                </div>
                 <div class="form-group form-change">
                     <button type="submit" class="form-control btn-default form-css">注册</button>
                 </div>
@@ -103,7 +108,7 @@
                     equalTo: "两次密码输入不一致"
                 },
                 email: {
-                    required:"请输入一个正确的邮箱"
+                    required: "请输入一个正确的邮箱"
                 }
             }
 
@@ -130,13 +135,13 @@
                 console.log(data);
                 if (data.code === 200) {
                     $("#username").nextAll().remove();
-                    $("#username").after("<span style='color: green;margin-left: 8%'>" + data.data+ "</span>");
-                    $(".btn-default").prop("disabled",false);
+                    $("#username").after("<span style='color: green;margin-left: 8%'>" + data.data + "</span>");
+                    $(".btn-default").prop("disabled", false);
 
                 } else {
                     $("#username").nextAll().remove();
-                    $("#username").after("<span style='color: red;margin-left: 8%'>" + data.message+ "</span>");
-                    $(".btn-default").prop("disabled",true);
+                    $("#username").after("<span style='color: red;margin-left: 8%'>" + data.message + "</span>");
+                    $(".btn-default").prop("disabled", true);
 
                 }
             }
@@ -144,6 +149,11 @@
 
     })
 
+
+    //加载时获取注册验证码图片
+    $(document).ready(function () {
+        $('#registerVerifyImg').click();
+    })
 
 </script>
 </body>
